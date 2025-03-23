@@ -1,11 +1,11 @@
-using System.Security.Claims;
-using System.Text.Json;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
+using System.Security.Claims;
+using System.Text.Json;
 using TrackYourTrip.Components.Account.Pages;
 using TrackYourTrip.Components.Account.Pages.Manage;
 using TrackYourTrip.Data;
