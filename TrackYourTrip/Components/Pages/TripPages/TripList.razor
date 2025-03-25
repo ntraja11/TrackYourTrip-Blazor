@@ -1,0 +1,97 @@
+﻿@page "/trip"
+
+@using TrackYourTrip.Data.Entities
+
+@inject ITripRepository _tripRepository
+
+
+@if (IsProcessing)
+{
+    <div class="loader">
+        Loading trips...
+    </div>
+}
+else
+{
+    <div class="card shadow border-0 mt-4">
+        <div class="card-header bg-black bg-gradient ml-0 py-3">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <h2 class="text-white py-2">Trip List</h2>
+                </div>
+            </div>
+        </div>
+        <div class="card-body py-4">
+            <div class="row pb-3">
+                <div class="col-12 text-end">
+                    <a href="trip/create" class="btn btn-lg btn-secondary" style="width:250px;">
+                        <i class="bi bi-plus-square"></i>
+                        Add new Trip
+                    </a>
+                </div>
+                @if (Trips.Any())
+                {
+                    <table class="table table-bordered table-striped mt-3">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Name</th>
+                                <th>Start Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var trip in Trips)
+                            {
+                                <tr>
+                                    <td>@trip.Id</td>
+                                    <td>@trip.Name</td>
+                                    <td>@trip.StartDate</td>
+                                    <td>@trip.Status</td>
+                                    <td>
+                                        <a href="@($"trip/update/{trip.Id}")" class="btn btn-primary">
+                                            <i class="bi bi-pencil-square"></i>
+                                            Edit
+                                        </a>
+                                        <button class="btn btn-danger" @onclick="() => HandleDelete(trip.Id)">
+                                            <i class="bi bi-trash3-fill"></i>
+                                            Delete
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private bool IsProcessing = true;
+    private IEnumerable<Trip> Trips = new List<Trip>();
+        
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await LoadTrips();
+            IsProcessing = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task LoadTrips()
+    {
+        Trips = await _tripRepository.GetAllAsync();
+    }
+
+    private async Task HandleDelete(int id)
+    {
+        await _tripRepository.DeleteAsync(id);
+        await LoadTrips();
+    }
+}

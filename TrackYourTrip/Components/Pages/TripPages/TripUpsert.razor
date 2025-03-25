@@ -1,0 +1,129 @@
+﻿@page "/trip/create"
+@page "/trip/update/{id:int}"
+@using TrackYourTrip.Data.Entities
+
+@inject ITripRepository _tripRepository
+@inject NavigationManager _navigationManager
+
+
+@if (IsProcessing)
+{
+    <div class="loader">
+        Loading trips...
+    </div>
+}
+else
+{
+    <div class="card shadow border-0 mt-4">
+        <div class="card-header bg-black bg-gradient ml-0 py-3">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <h2 class="text-white py-2">@(Id > 0 ? "Update" : "Create") Trip</h2>
+                </div>
+            </div>
+        </div>
+        <div class="card-body py-4">
+            <EditForm Model="Trip" FormName="TripEditForm" OnValidSubmit="UpsertTrip">
+                <DataAnnotationsValidator />
+
+                <div class="border p-3 mt-4">
+                    <div class="form-floating py-3 col-12">
+                        <InputText @bind-Value="Trip.Name" class="form-control" id="Name" placeholder="Name" />
+                        <label for="Name">Name</label>
+                        <ValidationMessage For="@(() => Trip.Name)" />
+                    </div>
+
+                    <div class="form-floating py-3 col-12">
+                        <InputText @bind-Value="Trip.From" class="form-control" id="From" placeholder="From" />
+                        <label for="From">From</label>
+                        <ValidationMessage For="@(() => Trip.From)" />
+                    </div>
+
+                    <div class="form-floating py-3 col-12">
+                        <InputText @bind-Value="Trip.To" class="form-control" id="To" placeholder="To" />
+                        <label for="To">To</label>
+                        <ValidationMessage For="@(() => Trip.To)" />
+                    </div>
+
+                    <div class="form-floating py-3 col-12">
+                        <InputDate @bind-Value="Trip.StartDate" class="form-control" id="StartDate" />
+                        <label for="StartDate">Start Date</label>
+                        <ValidationMessage For="@(() => Trip.StartDate)" />
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="col-6 col-md-3">
+                            <button type="submit" class="btn btn-primary form-control" >
+                                <i class="bi bi-floppy2-fill"></i>
+                                @(Id > 0 ? "Update" : "Create")
+                            </button>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <a href="trip" class="btn btn-secondary form-control">
+                                <i class="bi bi-arrow-left-square"></i>
+                                Back to Trip List
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private bool IsProcessing { get; set; } = true;
+
+    [SupplyParameterFromForm]
+    private Trip Trip { get; set; } = new Trip();
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await LoadTrip();
+            IsProcessing = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task LoadTrip()
+    {
+        if(Id > 0)
+        {
+            Trip = await _tripRepository.GetAsync(Id);
+        }        
+    }
+
+    private async Task UpsertTrip()
+    {
+        IsProcessing = true;
+
+        if (Trip.StartDate <= DateOnly.FromDateTime(DateTime.Now))
+        {
+            Trip.Status = StaticDetails.StatusInProgress;
+        }
+        else
+        {
+            Trip.Status = StaticDetails.StatusPlanned;
+        }
+
+
+        if (Trip.Id == 0)
+        {
+            await _tripRepository.CreateAsync(Trip);            
+        }
+        else
+        {
+            await _tripRepository.UpdateAsync(Trip);
+        }
+        IsProcessing = false;
+        _navigationManager.NavigateTo("trip");
+    }
+
+
+
+}

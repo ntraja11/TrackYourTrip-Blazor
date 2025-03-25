@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using TrackYourTrip.Components;
 using TrackYourTrip.Components.Account;
 using TrackYourTrip.Data;
+using TrackYourTrip.Repository;
+using TrackYourTrip.Repository.IRepository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +17,7 @@ builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddScoped<IdentityUserAccessor>();
 builder.Services.AddScoped<IdentityRedirectManager>();
 builder.Services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();
+builder.Services.AddScoped<ITripRepository, TripRepository>();
 
 builder.Services.AddAuthentication(options =>
     {

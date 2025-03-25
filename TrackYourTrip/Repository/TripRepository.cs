@@ -1,4 +1,5 @@
-﻿using TrackYourTrip.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using TrackYourTrip.Data;
 using TrackYourTrip.Data.Entities;
 using TrackYourTrip.Repository.IRepository;
 
@@ -12,44 +13,44 @@ namespace TrackYourTrip.Repository
             _db = db;
         }
 
-        public Trip Create(Trip trip)
+        public async Task<Trip> CreateAsync(Trip trip)
         {
-            _db.Trips.Add(trip);
-            _db.SaveChanges();
+            await _db.Trips.AddAsync(trip);
+            await _db.SaveChangesAsync();
             return trip;
         }
 
-        public bool Delete(int tripId)
+        public async Task<bool> DeleteAsync(int tripId)
         {
-            var trip = _db.Trips.FirstOrDefault(t => t.Id == tripId);
-            if(trip is not null)
+            var trip = await _db.Trips.FirstOrDefaultAsync(t => t.Id == tripId);
+            if (trip is not null)
             {
                 _db.Trips.Remove(trip);
-                return _db.SaveChanges() > 0;
+                return (await _db.SaveChangesAsync()) > 0;
             }
             return false;
         }
 
-        public Trip Get(int tripId)
+        public async Task<Trip> GetAsync(int tripId)
         {
-            Trip trip = _db.Trips.FirstOrDefault(t => t.Id == tripId);
+            var trip = await _db.Trips.FirstOrDefaultAsync(t => t.Id == tripId);
 
-            if(trip is not null)
+            if (trip is not null)
             {
                 return trip;
             }
             else return new Trip();
         }
 
-        public IEnumerable<Trip> GetAll()
+        public async Task<IEnumerable<Trip>> GetAllAsync()
         {
-            return _db.Trips.ToList();
+            return await _db.Trips.ToListAsync();
         }
 
-        public Trip Update(Trip trip)
+        public async Task<Trip> UpdateAsync(Trip trip)
         {
             _db.Trips.Update(trip);
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
 
             return trip;
         }
