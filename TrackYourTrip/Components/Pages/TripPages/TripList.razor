@@ -41,7 +41,6 @@ else
                     <table class="table table-bordered table-striped mt-3">
                         <thead>
                             <tr>
-                                <th>Id</th>
                                 <th>Name</th>
                                 <th>Start Date</th>
                                 <th>Status</th>
@@ -52,8 +51,7 @@ else
                             @foreach (var trip in Trips)
                             {
                                 <tr>
-                                    <td>@trip.Id</td>
-                                    <td>@trip.Name</td>
+                                    <td><a href="@($"trip/details/{trip.Id}")">@trip.Name</a></td>
                                     <td>@trip.StartDate</td>
                                     <td>@trip.Status</td>
                                     <td>
@@ -78,6 +76,8 @@ else
         </div>
     </div>
 }
+
+
 
 @code {
     private bool IsProcessing = true;
