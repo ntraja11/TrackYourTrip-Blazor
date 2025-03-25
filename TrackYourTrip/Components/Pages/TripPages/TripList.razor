@@ -61,10 +61,12 @@ else
                                             <i class="bi bi-pencil-square"></i>
                                             Edit
                                         </a>
-                                        <button class="btn btn-danger" @onclick="() => HandleDelete(trip.Id)">
-                                            <i class="bi bi-trash3-fill"></i>
-                                            Delete
-                                        </button>
+                                        <AuthorizeView Roles="@StaticDetails.RoleAdmin">
+                                            <button class="btn btn-danger" @onclick="() => HandleDelete(trip.Id)">
+                                                <i class="bi bi-trash3-fill"></i>
+                                                Delete
+                                            </button>
+                                        </AuthorizeView>
                                     </td>
                                 </tr>
                             }
