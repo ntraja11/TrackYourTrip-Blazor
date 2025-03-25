@@ -7,10 +7,25 @@ namespace TrackYourTrip.Data;
 public class TrackYourTripDbContext(DbContextOptions<TrackYourTripDbContext> options) : IdentityDbContext<ApplicationUser>(options)
 {
     public DbSet<Trip> Trips { get; set; }
+    public DbSet<Participant> Participants { get; set; }
+    public DbSet<Expense> Expenses { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<Expense>()
+        .HasOne(e => e.Trip)
+        .WithMany(t => t.Expenses) // Ensure Trip has a collection of Expenses
+        .HasForeignKey(e => e.TripId)
+        .OnDelete(DeleteBehavior.Cascade); // Cascade delete
+
+        // Configure Expense -> Participant relationship
+        modelBuilder.Entity<Expense>()
+            .HasOne(e => e.Participant)
+            .WithMany(p => p.Expenses) // Ensure Participant has a collection of Expenses
+            .HasForeignKey(e => e.ParticipantId)
+            .OnDelete(DeleteBehavior.Restrict);
 
         modelBuilder.Entity<Trip>().HasData(
             new Trip

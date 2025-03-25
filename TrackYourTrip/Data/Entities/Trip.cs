@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TrackYourTrip.Data.Entities
 {
@@ -30,5 +31,11 @@ namespace TrackYourTrip.Data.Entities
         public string? Notes { get; set; }
 
         public string? Type { get; set; }
+
+        [NotMapped]
+        public List<Participant> Participants { get; set; } = new();
+
+        [NotMapped]
+        public List<Expense> Expenses { get; set; } = new();
     }
 }
