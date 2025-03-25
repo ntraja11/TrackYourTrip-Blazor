@@ -3,6 +3,7 @@
 @using TrackYourTrip.Data.Entities
 
 @inject ITripRepository _tripRepository
+@inject IJSRuntime _js
 
 
 @if (IsProcessing)
@@ -22,8 +23,8 @@ else
             </div>
         </div>
         <div class="card-body py-4">
-            <div class="row pb-3">
-                <div class="col-12 text-end">
+            <div class="row pb-2">
+                <div class="col-12 text-end mb-2">
                     <a href="trip/create" class="btn btn-lg btn-secondary" style="width:250px;">
                         <i class="bi bi-plus-square"></i>
                         Add new Trip
@@ -92,6 +93,7 @@ else
     private async Task HandleDelete(int id)
     {
         await _tripRepository.DeleteAsync(id);
+        await _js.ToastrError("Trip deleted successfully.");
         await LoadTrips();
     }
 }

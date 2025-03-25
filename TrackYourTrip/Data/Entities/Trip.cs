@@ -6,16 +6,16 @@ namespace TrackYourTrip.Data.Entities
     {
         public int Id { get; set; }
         [Required]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         public string? Description { get; set; }
 
         public DateOnly? StartDate { get; set; }
         public DateOnly? EndDate { get; set; }
         [Required]
-        public string From { get; set; }
+        public string? From { get; set; }
         [Required]
-        public string To { get; set; }
+        public string? To { get; set; }
         [Display(Name = "Total Expense")]
         public double TotalExpense { get; set; }
         [Display(Name = "Starting Kilometer")]

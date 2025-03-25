@@ -4,6 +4,7 @@
 
 @inject ITripRepository _tripRepository
 @inject NavigationManager _navigationManager
+@inject IJSRuntime _js
 
 
 @if (IsProcessing)
@@ -114,11 +115,13 @@ else
 
         if (Trip.Id == 0)
         {
-            await _tripRepository.CreateAsync(Trip);            
+            await _tripRepository.CreateAsync(Trip);  
+            await _js.ToastrSuccess("Trip created successfully");
         }
         else
         {
             await _tripRepository.UpdateAsync(Trip);
+            await _js.ToastrSuccess("Trip updated successfully");
         }
         IsProcessing = false;
         _navigationManager.NavigateTo("trip");
