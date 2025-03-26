@@ -33,7 +33,7 @@ namespace TrackYourTrip.Repository
 
         public async Task<Trip> GetAsync(int tripId)
         {
-            var trip = await _db.Trips.FirstOrDefaultAsync(t => t.Id == tripId);
+            var trip = await _db.Trips.Include(v => v.Vehicle).FirstOrDefaultAsync(t => t.Id == tripId);
 
             if (trip is not null)
             {

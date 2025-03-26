@@ -11,17 +11,17 @@ namespace TrackYourTrip.Data.Entities
         public string Name { get; set; } = String.Empty;
         public string Description { get; set; } = String.Empty;
         [Required]
-        [Precision(5, 2)]
+        [Precision(10, 2)]
         public decimal Amount { get; set; } = 0;
         public DateOnly? ExpenseDate { get; set; }
 
 
         [ForeignKey("Participant")]
         public int ParticipantId { get; set; }
-        public Participant Participant { get; set; } = new Participant();
+        public Participant? Participant { get; set; }
 
         [ForeignKey("Trip")]
         public int TripId { get; set; }
-        public Trip Trip { get; set; } = new Trip();
+        public Trip? Trip { get; set; }
     }
 }

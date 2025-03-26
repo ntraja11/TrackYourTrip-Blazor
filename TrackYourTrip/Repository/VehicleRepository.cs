@@ -11,8 +11,8 @@ namespace TrackYourTrip.Repository
         public VehicleRepository(TrackYourTripDbContext db)
         {
             _db = db;
-        }    
-      
+        }
+
         public async Task<Vehicle> GetAsync(int vehicleId)
         {
             var vehicle = await _db.Vehicles.FirstOrDefaultAsync(t => t.Id == vehicleId);
@@ -27,6 +27,6 @@ namespace TrackYourTrip.Repository
         public async Task<IEnumerable<Vehicle>> GetAllAsync()
         {
             return await _db.Vehicles.ToListAsync();
-        }     
+        }
     }
 }

@@ -1,6 +1,5 @@
 ﻿@page "/trip/create"
 @page "/trip/update/{id:int}"
-@using TrackYourTrip.Data.Entities
 
 @inject ITripRepository _tripRepository
 @inject IVehicleRepository _vehicleRepository
@@ -11,7 +10,7 @@
 @if (IsProcessing)
 {
     <div class="loader">
-        Loading trips...
+        Loading trip...
     </div>
 }
 else

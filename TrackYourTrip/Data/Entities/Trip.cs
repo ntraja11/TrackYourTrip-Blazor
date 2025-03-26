@@ -19,7 +19,7 @@ namespace TrackYourTrip.Data.Entities
         [Required]
         public string? To { get; set; }
         [Display(Name = "Total Expense")]
-        public double TotalExpense { get; set; }
+        public decimal TotalExpense { get; set; }
         [Display(Name = "Starting Kilometer")]
         public int? StartKm { get; set; }
         [Display(Name = "Ending Kilometer")]
@@ -39,9 +39,9 @@ namespace TrackYourTrip.Data.Entities
         public Vehicle? Vehicle { get; set; }
 
         [NotMapped]
-        public List<Participant> Participants { get; set; } = new();
+        public IEnumerable<Participant> ParticipantList { get; set; } = new List<Participant>();
 
         [NotMapped]
-        public List<Expense> Expenses { get; set; } = new();
+        public IEnumerable<Expense> ExpenseList { get; set; } = new List<Expense>();
     }
 }

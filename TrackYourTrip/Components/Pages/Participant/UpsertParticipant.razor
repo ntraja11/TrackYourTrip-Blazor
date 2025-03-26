@@ -1,0 +1,183 @@
+﻿@page "/trip/{tripId:int}/add-participant"
+
+@inject UserManager<ApplicationUser> UserManager
+@inject NavigationManager NavigationManager
+@inject IParticipantRepository _participantRepository
+
+
+@if (IsProcessing)
+{
+    <div class="loader">
+        Loading...
+    </div>
+}
+else
+{
+    <div class="card shadow border-0 mt-4">
+        <div class="card-header bg-black bg-gradient ml-0 py-3">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <h2 class="text-white py-2">Add Participant</h2>
+                </div>
+            </div>
+        </div>
+        <div class="card-body py-4">
+
+            <div class="row">
+                <!-- Left Column: Dropdown and Add Button -->
+                <div class="col-md-6">
+                    <h5 class="pb-2">Available Participants</h5>
+                    <div class="form-floating">
+                        <InputSelect @bind-Value="SelectedUserId" class="form-control">
+                            <option value="" disabled selected>-- Select Participant --</option>
+                            @foreach (var user in AvailableUsers)
+                            {
+                                <option value="@user.Id">@user.UserName</option>
+                            }
+                        </InputSelect>
+                        <label for="SelectedUser">Add Participant</label>
+                    </div>
+                    <button class="btn btn-primary mt-3" @onclick="AddSelectedParticipant">Select Participant</button>
+                </div>
+
+                <!-- Right Column: Selected Participants -->
+                <div class="col-md-6">
+                    <h5 class="pb-2">Selected Participants</h5>
+                    <ul class="list-group">
+                        @foreach (var participant in SelectedParticipants)
+                        {
+                            <li class="list-group-item d-flex justify-content-between">
+                                @participant.Name
+                                <span class="text-muted">@participant.Email</span>
+                                <button class="btn btn-danger btn-sm" @onclick="() => RemoveParticipant(participant.Id)">
+                                    <i class="bi bi-trash"></i> Remove
+                                </button>
+                            </li>
+                        }
+                        @foreach (var participant in ParticipantsToAdd)
+                        {
+                            <li class="list-group-item d-flex justify-content-between bg-opacity-75">
+                                @participant.Name
+                                <span class="text-muted">@participant.Email</span>
+                                <button class="btn btn-danger btn-sm" @onclick="() => RemoveParticipant(participant.Id)">
+                                    <i class="bi bi-trash"></i> Remove
+                                </button>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-12 text-end">
+                    <!-- Submit Button -->
+                    <button class="btn btn-success btn-lg" style="width:250px;" @onclick="SubmitParticipants">
+                        <i class="bi bi-check-circle"></i> Submit
+                    </button>
+
+                    <a href="@($"trip/details/{TripId}")" class="btn btn-lg btn-secondary" style="width:250px;">
+                        <i class="bi bi-arrow-left-square"></i>
+                        Back to Trip
+                    </a>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+}
+
+
+
+
+
+@code {
+
+    [Parameter]
+    public int TripId { get; set; }
+    private bool IsProcessing = true;
+
+    private IEnumerable<ApplicationUser> AvailableUsers = new List<ApplicationUser>();
+    private IEnumerable<Participant> SelectedParticipants = new List<Participant>();
+    private List<Participant> ParticipantsToAdd = new List<Participant>();
+    private string? SelectedUserId = null;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await SetState();
+        }
+
+
+    }
+
+    private async Task SetState()
+    {
+        var allUsers = UserManager.Users.ToList();
+        SelectedParticipants = await _participantRepository.GetAllAsync(p => p.TripId == TripId);
+
+        var selectedEmails = SelectedParticipants.Select(p => p.Email).ToHashSet();
+        AvailableUsers = allUsers.Where(u => !selectedEmails.Contains(u.Email!)).ToList();
+        IsProcessing = false;
+        StateHasChanged();
+    }
+
+
+    private void AddSelectedParticipant()
+    {
+        var selectedUser = AvailableUsers.FirstOrDefault(u => u.Id == SelectedUserId);
+        if (selectedUser != null)
+        {
+            IsProcessing = true;
+            var newParticipant = new Participant
+                {
+                    Name = selectedUser.UserName!,
+                    Email = selectedUser!.Email!,
+                    TripId = TripId
+                };
+
+            ParticipantsToAdd.Add(newParticipant);
+
+            AvailableUsers = AvailableUsers.Where(u => u.Id != SelectedUserId).ToList();
+
+            SelectedUserId = null;
+            IsProcessing = false;
+            StateHasChanged();
+        }
+    }
+
+
+    private async Task SubmitParticipants()
+    {
+        IsProcessing = true;
+        foreach (var participant in ParticipantsToAdd)
+        {
+            await _participantRepository.CreateAsync(participant);
+        }
+        IsProcessing = false;
+        NavigationManager.NavigateTo($"/trip/details/{TripId}");
+    }
+
+    private async Task RemoveParticipant(int participantId)
+    {
+        var participantToRemove = SelectedParticipants.FirstOrDefault(p => p.Id == participantId);
+        if (participantToRemove != null)
+        {
+            IsProcessing = true;
+            await _participantRepository.DeleteAsync(participantId);
+
+            await SetState();
+            StateHasChanged();
+        }
+        var undoSelectedParticipant = ParticipantsToAdd.FirstOrDefault(p => p.Id == participantId);
+        if (undoSelectedParticipant != null)
+        {
+            ParticipantsToAdd.Remove(undoSelectedParticipant);
+            await SetState();
+        }
+    }
+
+
+
+
+}

@@ -17,14 +17,14 @@ public class TrackYourTripDbContext(DbContextOptions<TrackYourTripDbContext> opt
 
         modelBuilder.Entity<Expense>()
         .HasOne(e => e.Trip)
-        .WithMany(t => t.Expenses) // Ensure Trip has a collection of Expenses
+        .WithMany(t => t.ExpenseList) // Ensure Trip has a collection of Expenses
         .HasForeignKey(e => e.TripId)
         .OnDelete(DeleteBehavior.Cascade); // Cascade delete
 
         // Configure Expense -> Participant relationship
         modelBuilder.Entity<Expense>()
             .HasOne(e => e.Participant)
-            .WithMany(p => p.Expenses) // Ensure Participant has a collection of Expenses
+            .WithMany(p => p.ExpenseList) // Ensure Participant has a collection of Expenses
             .HasForeignKey(e => e.ParticipantId)
             .OnDelete(DeleteBehavior.Restrict);
 

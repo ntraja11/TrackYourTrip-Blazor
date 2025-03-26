@@ -15,7 +15,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Components\Pages\ParticipantPages\" />
     <Folder Include="ViewModels\" />
   </ItemGroup>
 

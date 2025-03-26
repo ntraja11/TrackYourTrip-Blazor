@@ -20,6 +20,7 @@ builder.Services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuth
 builder.Services.AddScoped<ITripRepository, TripRepository>();
 builder.Services.AddScoped<IVehicleRepository, VehicleRepository>();
 builder.Services.AddScoped<IExpenseRepository, ExpenseRepository>();
+builder.Services.AddScoped<IParticipantRepository, ParticipantRepository>();
 
 builder.Services.AddAuthentication(options =>
     {

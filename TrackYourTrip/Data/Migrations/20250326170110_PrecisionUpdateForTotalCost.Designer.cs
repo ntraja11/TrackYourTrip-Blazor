@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TrackYourTrip.Data;
 
@@ -11,9 +12,11 @@ using TrackYourTrip.Data;
 namespace TrackYourTrip.Migrations
 {
     [DbContext(typeof(TrackYourTripDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250326170110_PrecisionUpdateForTotalCost")]
+    partial class PrecisionUpdateForTotalCost
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -329,8 +332,8 @@ namespace TrackYourTrip.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("TotalExpense")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<double>("TotalExpense")
+                        .HasColumnType("float");
 
                     b.Property<int?>("TotalKm")
                         .HasColumnType("int");
@@ -359,7 +362,7 @@ namespace TrackYourTrip.Migrations
                             StartDate = new DateOnly(2025, 5, 15),
                             Status = "Completed",
                             To = "Ooty",
-                            TotalExpense = 25000m,
+                            TotalExpense = 25000.0,
                             Type = "Family"
                         },
                         new
@@ -373,7 +376,7 @@ namespace TrackYourTrip.Migrations
                             StartDate = new DateOnly(2025, 6, 10),
                             Status = "Planned",
                             To = "Kodaikanal",
-                            TotalExpense = 18000m,
+                            TotalExpense = 18000.0,
                             Type = "Friends"
                         },
                         new
@@ -387,7 +390,7 @@ namespace TrackYourTrip.Migrations
                             StartDate = new DateOnly(2025, 4, 5),
                             Status = "Completed",
                             To = "Mysore",
-                            TotalExpense = 15000m,
+                            TotalExpense = 15000.0,
                             Type = "Family"
                         });
                 });

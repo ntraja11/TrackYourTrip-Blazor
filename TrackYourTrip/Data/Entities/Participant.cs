@@ -12,11 +12,11 @@ namespace TrackYourTrip.Data.Entities
         [Required]
         public string Email { get; set; } = String.Empty;
 
-        [Precision(5, 2)]
+        [Precision(10, 2)]
         public decimal TotalTripExpense { get; set; } = 0;
 
         [NotMapped]
-        public ICollection<Expense> Expenses { get; set; } = new List<Expense>();
+        public IEnumerable<Expense> ExpenseList { get; set; } = new List<Expense>();
 
         [ForeignKey("Trip")]
         public int TripId { get; set; }

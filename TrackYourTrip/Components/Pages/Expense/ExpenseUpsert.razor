@@ -1,0 +1,137 @@
+﻿@page "/trip/{tripId:int}/add-expense"
+@page "/trip/{tripId:int}/add-expense/{expenseId:int}"
+
+@inject NavigationManager _navigationManager
+@inject ITripRepository _tripRepository
+@inject IExpenseRepository _expenseRepository
+@inject IParticipantRepository _participantRepository
+@inject IJSRuntime _js
+
+
+@if (IsProcessing)
+{
+    <div class="loader">
+        Loading...
+    </div>
+}
+else
+{
+    <div class="card shadow border-0 mt-4">
+        <div class="card-header bg-black bg-gradient ml-0 py-3">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <h2 class="text-white py-2">Add Expense</h2>
+                </div>
+            </div>
+        </div>
+        <div class="card-body py-4">
+            <EditForm Model="Expense" FormName="ExpenseEditForm" OnValidSubmit="UpsertExpense">
+                <DataAnnotationsValidator />
+
+                <div class="border p-3 mt-4">
+                    <div class="form-floating py-3 col-12">
+                        <InputText @bind-Value="Expense.Name" class="form-control" id="Name" placeholder="Name" />
+                        <label for="Name">Name</label>
+                        <ValidationMessage For="@(() => Expense.Name)" />
+                    </div>
+
+                    <div class="form-floating py-3 col-12">
+                        <InputNumber @bind-Value="Expense.Amount" class="form-control" id="Amount" placeholder="Amount" />
+                        <label for="Amount">Amount</label>
+                        <ValidationMessage For="@(() => Expense.Amount)" />
+                    </div>                                     
+
+                    <div class="form-floating py-3 col-12">
+                        <InputSelect @bind-Value="Expense.ParticipantId" class="form-control" id="ParticipantId">
+                            <option value="" disabled selected>-- Select a Participant --</option>
+                            @foreach (var participant in ParticipantList)
+                            {
+                                <option value="@participant.Id">@participant.Name</option>
+                            }
+                        </InputSelect>
+                        <label for="Participant">Participant</label>
+                        <ValidationMessage For="@(() => Expense.ParticipantId)" />
+                    </div>
+
+
+
+                    <div class="row mt-3">
+                        <div class="col-6 col-md-3">
+                            <button type="submit" class="btn btn-primary form-control">
+                                <i class="bi bi-floppy2-fill"></i>
+                                @(ExpenseId > 0 ? "Update" : "Create")
+                            </button>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <a href="@($"trip/details/{TripId}")" class="btn btn-secondary form-control">
+                                <i class="bi bi-arrow-left-square"></i>
+                                Back to Trip Details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+}
+
+
+
+
+@code {
+
+    [Parameter]
+    public int TripId { get; set; }
+    [Parameter]
+    public int ExpenseId { get; set; }
+    private bool IsProcessing = true;
+
+    [SupplyParameterFromForm]
+    private Expense Expense { get; set; } = new Expense();
+
+
+    private IEnumerable<Participant> ParticipantList = new List<Participant>();
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await LoadData();
+            IsProcessing = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task LoadData()
+    {
+        if (ExpenseId > 0)
+        {
+            Expense = await _expenseRepository.GetAsync(ExpenseId);
+        }
+        else
+        {
+            Expense.TripId = TripId;
+        }
+        ParticipantList = await _participantRepository.GetAllAsync(p => p.TripId == TripId);
+    }
+
+    private async Task UpsertExpense()
+    {
+        IsProcessing = true;
+
+        if (Expense.Id == 0)
+        {
+            Expense.TripId = TripId;
+            await _expenseRepository.CreateAsync(Expense);
+            await _js.ToastrSuccess("Expense created successfully");
+        }
+        else
+        {
+            await _expenseRepository.UpdateAsync(Expense);
+            await _js.ToastrSuccess("Expense updated successfully");
+        }
+        IsProcessing = false;
+        _navigationManager.NavigateTo($"trip/details/{TripId}");
+    }
+
+}
