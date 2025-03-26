@@ -1,5 +1,5 @@
 ﻿@page "/trip/create"
-@page "/trip/update/{id:int}"
+@page "/trip/update/{tripId:int}"
 
 @inject ITripRepository _tripRepository
 @inject IVehicleRepository _vehicleRepository
@@ -19,13 +19,15 @@ else
         <div class="card-header bg-black bg-gradient ml-0 py-3">
             <div class="row">
                 <div class="col-12 text-center">
-                    <h2 class="text-white py-2">@(Id > 0 ? "Update" : "Create") Trip</h2>
+                    <h2 class="text-white py-2">@(TripId > 0 ? "Update" : "Create") Trip</h2>
                 </div>
             </div>
         </div>
         <div class="card-body py-4">
             <EditForm Model="Trip" FormName="TripEditForm" OnValidSubmit="UpsertTrip">
                 <DataAnnotationsValidator />
+                <ValidationSummary />
+
 
                 <div class="border p-3 mt-4">
                     <div class="form-floating py-3 col-12">
@@ -59,17 +61,41 @@ else
                     </div>
 
                     <div class="form-floating py-3 col-12">
+                        <InputNumber @bind-Value="Trip.StartKm" class="form-control" id="StartKm" />
+                        <label for="StartKm">Start Km</label>
+                        <ValidationMessage For="@(() => Trip.StartKm)" />
+                    </div>
+
+                    <div class="form-floating py-3 col-12">
+                        <InputNumber @bind-Value="Trip.EndKm" class="form-control" id="EndKm" />
+                        <label for="EndKm">End Km</label>
+                        <ValidationMessage For="@(() => Trip.EndKm)" />
+                    </div>
+
+                    <div class="form-floating py-3 col-12">
                         <InputDate @bind-Value="Trip.StartDate" class="form-control" id="StartDate" />
                         <label for="StartDate">Start Date</label>
                         <ValidationMessage For="@(() => Trip.StartDate)" />
+                    </div>
+
+                    <div class="form-floating py-3 col-12">
+                        <InputDate @bind-Value="Trip.EndDate" class="form-control" id="EndDate" />
+                        <label for="EndDate">End Date</label>
+                        <ValidationMessage For="@(() => Trip.EndDate)" />
                     </div>
 
                     <div class="row mt-3">
                         <div class="col-6 col-md-3">
                             <button type="submit" class="btn btn-primary form-control" >
                                 <i class="bi bi-floppy2-fill"></i>
-                                @(Id > 0 ? "Update" : "Create")
+                                @(TripId > 0 ? "Update" : "Create")
                             </button>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <a href="@($"trip/details/{TripId}")" class="btn btn-secondary form-control">
+                                <i class="bi bi-arrow-left-square"></i>
+                                Back to Trip Details
+                            </a>
                         </div>
                         <div class="col-6 col-md-3">
                             <a href="trip" class="btn btn-secondary form-control">
@@ -86,7 +112,7 @@ else
 
 @code {
     [Parameter]
-    public int Id { get; set; }
+    public int TripId { get; set; }
 
     private bool IsProcessing { get; set; } = true;
 
@@ -112,9 +138,9 @@ else
 
     private async Task LoadTrip()
     {
-        if(Id > 0)
+        if(TripId > 0)
         {
-            Trip = await _tripRepository.GetAsync(Id);
+            Trip = await _tripRepository.GetAsync(TripId);
         }        
     }
 
@@ -129,6 +155,12 @@ else
         else
         {
             Trip.Status = StaticDetails.StatusPlanned;
+        }
+
+        if(Trip.EndKm > Trip.StartKm)
+        {
+            Trip.Status = StaticDetails.StatusCompleted;
+            Trip.TotalKm = Trip.EndKm - Trip.StartKm;
         }
 
 

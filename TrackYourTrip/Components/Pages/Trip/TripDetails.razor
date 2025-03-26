@@ -24,14 +24,10 @@ else
         <div class="card-body py-4">
             <div class="row pb-2">
                 <div class="col-6 text-start mb-2">
-                    <a href="@($"trip/{TripId}/add-participant")" class="btn btn-lg btn-primary" style="width:250px;">
+                    <a href="@($"trip/update/{TripId}")" class="btn btn-lg btn-primary" style="width:250px;">
                         <i class="bi bi-person-plus-fill"></i>
-                        Manage Participants
-                    </a>
-                    <a href="@($"trip/{TripId}/add-expense")" class="btn btn-lg btn-primary" style="width:250px;">
-                        <i class="bi bi-person-plus-fill"></i>
-                        Add Expense
-                    </a>
+                        Manage Trip
+                    </a>                    
                 </div>
                 <div class="col-6 text-end mb-2">
                     <a href="trip" class="btn btn-lg btn-secondary" style="width:250px;">
@@ -41,7 +37,7 @@ else
                 </div>               
             </div>
 
-            <table class="table table-bordered">
+            <table class="table table-bordered mb-5">
                 <tr>
                     <th>Name</th>
                     <td>@Trip.Name</td>
@@ -76,14 +72,26 @@ else
                 </tr>
             </table>
 
-            @if (Trip.ParticipantList is not null && Trip.ParticipantList.Any())
+            <div class="row pb-2">
+                <div class="col-6 text-start">
+                    <a href="@($"trip/{TripId}/add-participant")" class="btn btn-lg btn-primary" style="width:250px;">
+                        <i class="bi bi-person-plus-fill"></i>
+                        Manage Participants
+                    </a>                
+                </div>
+            </div>
+
+            @if (TripParticipantList.Any())
             {
-                <table class="table table-bordered table-striped mt-5">
+                <table class="table table-bordered table-striped mb-5">
                     <thead>
                         <tr>
                             <th scope="col">Name</th>
-                            <th scope="col">Total expense</th>
-                            <th scope="col">Share Difference (Single share = @SingleParticipantShare)</th>
+                            @if (TripExpenseList.Any())
+                            {
+                                <th scope="col">Total expense</th>
+                                <th scope="col">Share Difference (Single share = @SingleParticipantShare)</th>
+                            }                            
                         </tr>
                     </thead>
                     <tbody>
@@ -92,8 +100,11 @@ else
                             var differenceFromAverage = participant.TotalTripExpense - SingleParticipantShare;
                             <tr>
                                 <td>@participant.Name</td>
-                                <td>@participant.TotalTripExpense</td>
-                                <td><span class="@(differenceFromAverage > 0 ? "text-success" : "text-danger fw-bold")">@differenceFromAverage.ToString("F2")</span></td>
+                                @if (TripExpenseList.Any())
+                                {
+                                    <td>@participant.TotalTripExpense</td>
+                                    <td><span class="@(differenceFromAverage > 0 ? "text-success" : "text-danger fw-bold")">@differenceFromAverage.ToString("F2")</span></td>                                    
+                                }                                
                             </tr>
                         }
                     </tbody>
@@ -105,9 +116,18 @@ else
             }
 
 
+            <div class="row pb-2">
+                <div class="col-6 text-start">
+                    <a href="@($"trip/{TripId}/add-expense")" class="btn btn-lg btn-primary" style="width:250px;">
+                        <i class="bi bi-person-plus-fill"></i>
+                        Add Expense
+                    </a>
+                </div>
+            </div>
+
             @if (Trip.ExpenseList is not null && Trip.ExpenseList.Any())
             {
-                <table class="table table-bordered table-striped mt-5">
+                <table class="table table-bordered table-striped mt-3">
                     <thead>
                         <tr>
                             <th scope="col">Name</th>
@@ -155,13 +175,13 @@ else
     {
         if (firstRender)
         {
-            await LoadTrip();
+            await LoadTripDetails();
             IsProcessing = false;
             StateHasChanged();
         }
     }
 
-    private async Task LoadTrip()
+    private async Task LoadTripDetails()
     {
         if (TripId > 0)
         {
@@ -171,7 +191,10 @@ else
             Trip.ParticipantList = TripParticipantList;
             Trip.ExpenseList = TripExpenseList;
 
-            CalculateTripCost();
+            if (TripExpenseList.Any())
+            {
+                CalculateTripCost();
+            }            
         }
     }
 

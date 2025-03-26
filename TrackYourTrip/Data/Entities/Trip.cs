@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using TrackYourTrip.Utility;
 
 namespace TrackYourTrip.Data.Entities
 {
@@ -11,17 +12,19 @@ namespace TrackYourTrip.Data.Entities
         public string? Name { get; set; }
 
         public string? Description { get; set; }
-
-        public DateOnly? StartDate { get; set; }
-        public DateOnly? EndDate { get; set; }
         [Required]
         public string? From { get; set; }
         [Required]
         public string? To { get; set; }
+
+        public DateOnly? StartDate { get; set; }
+        public DateOnly? EndDate { get; set; }
+        
         [Display(Name = "Total Expense")]
         public decimal TotalExpense { get; set; }
         [Display(Name = "Starting Kilometer")]
         public int? StartKm { get; set; }
+        [EndKmGreaterThanStartKm]
         [Display(Name = "Ending Kilometer")]
         public int? EndKm { get; set; }
         [Display(Name = "Total Kilometer")]
