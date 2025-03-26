@@ -9,6 +9,7 @@ public class TrackYourTripDbContext(DbContextOptions<TrackYourTripDbContext> opt
     public DbSet<Trip> Trips { get; set; }
     public DbSet<Participant> Participants { get; set; }
     public DbSet<Expense> Expenses { get; set; }
+    public DbSet<Vehicle> Vehicles { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -73,5 +74,42 @@ public class TrackYourTripDbContext(DbContextOptions<TrackYourTripDbContext> opt
 
 
             );
+
+        modelBuilder.Entity<Vehicle>().HasData(
+            new Vehicle
+            {
+                Id = 1,
+                Name = "Mahindra Scorpio",
+                Owner = "Raja",
+                Fuel = "Diesel",
+                MileagePerLitre = "10"
+            },
+            new Vehicle
+            {
+                Id = 2,
+                Name = "Honda Accord",
+                Owner = "Raja Anand",
+                Fuel = "CNG",
+                MileagePerLitre = "20"
+            },
+            new Vehicle
+            {
+                Id = 3,
+                Name = "Mahindra Scorpio",
+                Owner = "Balu",
+                Fuel = "Diesel",
+                MileagePerLitre = "10"
+            },
+            new Vehicle
+            {
+                Id = 4,
+                Name = "Maruti Swift",
+                Owner = "Karthik Raja",
+                Fuel = "Petrol",
+                MileagePerLitre = "16"
+            }
+
+
+        );
     }
 }

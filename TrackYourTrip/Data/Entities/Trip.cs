@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TrackYourTrip.Data.Entities
@@ -31,6 +32,11 @@ namespace TrackYourTrip.Data.Entities
         public string? Notes { get; set; }
 
         public string? Type { get; set; }
+
+        [ForeignKey("Vehicle")]
+        public int? VehicleId { get; set; }
+        [ValidateNever]
+        public Vehicle? Vehicle { get; set; }
 
         [NotMapped]
         public List<Participant> Participants { get; set; } = new();

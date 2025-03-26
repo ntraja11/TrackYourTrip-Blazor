@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TrackYourTrip.Data;
 
@@ -11,9 +12,11 @@ using TrackYourTrip.Data;
 namespace TrackYourTrip.Migrations
 {
     [DbContext(typeof(TrackYourTripDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250326102449_AddVehicleTableToDb")]
+    partial class AddVehicleTableToDb
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -415,40 +418,6 @@ namespace TrackYourTrip.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Vehicles");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Fuel = "Diesel",
-                            MileagePerLitre = "10",
-                            Name = "Mahindra Scorpio",
-                            Owner = "Raja"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Fuel = "CNG",
-                            MileagePerLitre = "20",
-                            Name = "Honda Accord",
-                            Owner = "Raja Anand"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Fuel = "Diesel",
-                            MileagePerLitre = "10",
-                            Name = "Mahindra Scorpio",
-                            Owner = "Balu"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Fuel = "Petrol",
-                            MileagePerLitre = "16",
-                            Name = "Maruti Swift",
-                            Owner = "Karthik Raja"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

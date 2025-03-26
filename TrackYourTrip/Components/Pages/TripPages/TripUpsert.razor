@@ -81,6 +81,8 @@ else
     [SupplyParameterFromForm]
     private Trip Trip { get; set; } = new Trip();
 
+    private IEnumerable<Vehicle> Vehicles { get; set; } = new List<Vehicle>();
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
