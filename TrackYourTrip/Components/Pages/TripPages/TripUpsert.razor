@@ -3,6 +3,7 @@
 @using TrackYourTrip.Data.Entities
 
 @inject ITripRepository _tripRepository
+@inject IVehicleRepository _vehicleRepository
 @inject NavigationManager _navigationManager
 @inject IJSRuntime _js
 
@@ -47,6 +48,18 @@ else
                     </div>
 
                     <div class="form-floating py-3 col-12">
+                        <InputSelect @bind-Value="Trip.VehicleId" class="form-control" id="VehicleId">
+                            <option value="" disabled selected>-- Select a Vehicle --</option>
+                            @foreach (var vehicle in VehicleList)
+                            {
+                                <option value="@vehicle.Id">@vehicle.Name</option>
+                            }
+                        </InputSelect>
+                        <label for="Vehicle">Vehicle</label>
+                        <ValidationMessage For="@(() => Trip.VehicleId)" />
+                    </div>
+
+                    <div class="form-floating py-3 col-12">
                         <InputDate @bind-Value="Trip.StartDate" class="form-control" id="StartDate" />
                         <label for="StartDate">Start Date</label>
                         <ValidationMessage For="@(() => Trip.StartDate)" />
@@ -81,7 +94,12 @@ else
     [SupplyParameterFromForm]
     private Trip Trip { get; set; } = new Trip();
 
-    private IEnumerable<Vehicle> Vehicles { get; set; } = new List<Vehicle>();
+    private IEnumerable<Vehicle> VehicleList { get; set; } = new List<Vehicle>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        VehicleList = await _vehicleRepository.GetAllAsync();
+    }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
