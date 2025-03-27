@@ -1,12 +1,17 @@
 ﻿@page "/trip"
 
+
+@attribute [Authorize]
+
+@inject AuthenticationStateProvider AuthenticationStateProvider
 @inject ITripRepository _tripRepository
+@inject IParticipantRepository _participantRepository
 @inject IJSRuntime _js
 
 <ConfirmationModal OnModalConfirmation="ConfirmDeleteTrip"
-    Title="Are you sure you want to delete this trip?"
-    ButtonText="Delete"
-    BootstrapButtonClass="btn-danger">
+Title="Are you sure you want to delete this trip?"
+ButtonText="Delete"
+BootstrapButtonClass="btn-danger">
 </ConfirmationModal>
 
 
@@ -79,8 +84,9 @@ else
 
 @code {
     private bool IsProcessing = true;
-    private IEnumerable<Trip> Trips = new List<Trip>();
+    private List<Trip> Trips = new List<Trip>();
     private int TripIdToDelete = 0;
+    private bool isAdmin;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -94,7 +100,28 @@ else
 
     private async Task LoadTrips()
     {
-        Trips = await _tripRepository.GetAllAsync();
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        
+
+        isAdmin = user.IsInRole(StaticDetails.RoleAdmin);
+
+        if (isAdmin)
+        {
+            Trips = (await _tripRepository.GetAllAsync()).ToList();
+        }
+        else
+        {
+            var userName = user.Identity?.Name;
+            var participants = await _participantRepository.GetAllAsync(p => p.Name == userName);
+            var trips = participants.Select(p => p.TripId).ToList();
+            foreach (var tripId in trips)
+            {
+                Trips.AddRange(await _tripRepository.GetAllAsync(t => t.Id == tripId));
+            }
+        }
+
+        
     }
 
     private async Task HandleDelete(int id)

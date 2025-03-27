@@ -1,5 +1,7 @@
 ﻿@page "/trip/{tripId:int}/add-participant"
 
+@attribute [Authorize]
+
 @inject UserManager<ApplicationUser> UserManager
 @inject NavigationManager NavigationManager
 @inject IParticipantRepository _participantRepository
@@ -172,6 +174,7 @@ else
         var undoSelectedParticipant = ParticipantsToAdd.FirstOrDefault(p => p.Id == participantId);
         if (undoSelectedParticipant != null)
         {
+            IsProcessing = true;
             ParticipantsToAdd.Remove(undoSelectedParticipant);
             await SetState();
         }

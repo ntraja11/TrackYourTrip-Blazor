@@ -1,5 +1,7 @@
 ﻿@page "/trip/details/{tripId:int}"
 
+@attribute [Authorize]
+
 @inject ITripRepository _tripRepository
 @inject IExpenseRepository _expenseRepository
 @inject IParticipantRepository _participantRepository
@@ -185,7 +187,7 @@ else
     {
         if (TripId > 0)
         {
-            Trip = await _tripRepository.GetAsync(TripId);
+            Trip = await _tripRepository.GetAsync(TripId, true);
             TripParticipantList = await _participantRepository.GetAllAsync(p => p.TripId == TripId);
             TripExpenseList = await _expenseRepository.GetAllAsync(p => p.TripId == TripId);
             Trip.ParticipantList = TripParticipantList;

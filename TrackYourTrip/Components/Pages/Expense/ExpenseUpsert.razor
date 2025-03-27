@@ -1,6 +1,8 @@
 ﻿@page "/trip/{tripId:int}/add-expense"
 @page "/trip/{tripId:int}/add-expense/{expenseId:int}"
 
+@attribute [Authorize]
+
 @inject NavigationManager _navigationManager
 @inject ITripRepository _tripRepository
 @inject IExpenseRepository _expenseRepository

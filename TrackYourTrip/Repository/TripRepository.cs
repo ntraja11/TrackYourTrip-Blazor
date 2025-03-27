@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
+using System.Linq;
 using TrackYourTrip.Data;
 using TrackYourTrip.Data.Entities;
 using TrackYourTrip.Repository.IRepository;
@@ -31,21 +33,20 @@ namespace TrackYourTrip.Repository
             return false;
         }
 
-        public async Task<Trip> GetAsync(int tripId)
+        public async Task<Trip> GetAsync(int tripId, bool noTracking = false)
         {
-            var trip = await _db.Trips.Include(v => v.Vehicle).FirstOrDefaultAsync(t => t.Id == tripId);
+            IQueryable<Trip> query = _db.Trips.Include(v => v.Vehicle);
 
-            if (trip is not null)
-            {
-                return trip;
-            }
-            else return new Trip();
-        }
+            //if (noTracking)
+            //{
+            //    query = query.AsNoTracking();
+            //}
 
-        public async Task<IEnumerable<Trip>> GetAllAsync()
-        {
-            return await _db.Trips.ToListAsync();
-        }
+
+            var trip = await query.FirstOrDefaultAsync(t => t.Id == tripId);
+
+            return trip ?? new Trip();
+        }               
 
         public async Task<Trip> UpdateAsync(Trip trip)
         {
@@ -53,6 +54,34 @@ namespace TrackYourTrip.Repository
             await _db.SaveChangesAsync();
 
             return trip;
+        }
+                
+
+        public async Task<IEnumerable<Trip>> GetAllAsync(Expression<Func<Trip, bool>>? filter = null,
+            string? includeProperties = null)
+        {
+            return await GetQuery(filter, includeProperties);
+        }
+
+
+        private async Task<IEnumerable<Trip>> GetQuery(Expression<Func<Trip, bool>>? filter, string? includeProperties)
+        {
+            IQueryable<Trip> query = _db.Set<Trip>();
+
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+            if (!string.IsNullOrEmpty(includeProperties))
+            {
+                foreach (var includeProperty in includeProperties.Split(new char[] { ',' }, System.StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(includeProperty);
+                }
+
+            }
+
+            return await query.ToListAsync();
         }
     }
 }

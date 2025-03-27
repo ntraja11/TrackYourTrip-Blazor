@@ -1,10 +1,15 @@
 ﻿@page "/trip/create"
 @page "/trip/update/{tripId:int}"
 
+
+@attribute [Authorize]
+
 @inject ITripRepository _tripRepository
 @inject IVehicleRepository _vehicleRepository
 @inject NavigationManager _navigationManager
 @inject IJSRuntime _js
+
+
 
 
 @if (IsProcessing)
