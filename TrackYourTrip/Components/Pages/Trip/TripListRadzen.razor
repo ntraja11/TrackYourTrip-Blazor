@@ -1,4 +1,4 @@
-﻿@page "/trip"
+﻿@page "/trip-radzen"
 
 
 @attribute [Authorize]
@@ -42,38 +42,31 @@ else
                 </div>
                 @if (Trips.Any())
                 {
-                    <table class="table table-bordered table-striped mt-3">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Start Date</th>
-                                <th>Status</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var trip in Trips)
-                            {
-                                <tr>
-                                    <td><a href="@($"trip/details/{trip.Id}")">@trip.Name</a></td>
-                                    <td>@trip.StartDate</td>
-                                    <td>@trip.Status</td>
-                                    <td>
-                                        <a href="@($"trip/update/{trip.Id}")" class="btn btn-primary">
-                                            <i class="bi bi-pencil-square"></i>
-                                            Edit
-                                        </a>
-                                        <AuthorizeView Roles="@StaticDetails.RoleAdmin">
-                                            <button class="btn btn-danger" @onclick="() => HandleDelete(trip.Id)">
-                                                <i class="bi bi-trash3-fill"></i>
-                                                Delete
-                                            </button>
-                                        </AuthorizeView>
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
+                    <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false" FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="3" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
+                                    Data="@Trips" LogicalFilterOperator="LogicalFilterOperator.Or" SelectionMode="DataGridSelectionMode.Single">
+                        <Columns>
+                            <RadzenDataGridColumn Property="Name" Title="Name" Frozen="true">
+                                <Template Context="trip">
+                                    <RadzenLink Text="@trip.Name" Path="@($"trip/details/{trip.Id}")" />
+                                </Template>
+                            </RadzenDataGridColumn>
+
+                            <RadzenDataGridColumn Property="StartDate" Title="Start Date" Frozen="true" />
+                            <RadzenDataGridColumn Property="Status" Title="Status" />
+                            <RadzenDataGridColumn Title="Action" Frozen="true" Sortable="false" Filterable="false" TextAlign="TextAlign.Center">
+                                <Template Context="trip">
+                                    <RadzenButton Shade="Shade.Light" ButtonStyle="ButtonStyle.Primary"
+                                                  Text="Edit" Click="@(() => _navigationManager.NavigateTo($"trip/update/{trip.Id}"))">
+                                    </RadzenButton>
+                                    <AuthorizeView Roles="@StaticDetails.RoleAdmin">
+                                        <RadzenButton Shade="Shade.Light" ButtonStyle="ButtonStyle.Danger"
+                                                      Text="Delete" Click="@(() => HandleDelete(trip.Id))">
+                                        </RadzenButton>
+                                    </AuthorizeView>
+                                </Template>
+                            </RadzenDataGridColumn>
+                        </Columns>
+                    </RadzenDataGrid>
                 }
 
             </div>
