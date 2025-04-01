@@ -129,18 +129,11 @@ else
     protected override async Task OnInitializedAsync()
     {
         VehicleList = await _vehicleRepository.GetAllAsync();
+        await LoadTrip();
+        IsProcessing = false;
+        StateHasChanged();
     }
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            await LoadTrip();
-            IsProcessing = false;
-            StateHasChanged();
-        }
-    }
-
+    
     private async Task LoadTrip()
     {
         if(TripId > 0)
