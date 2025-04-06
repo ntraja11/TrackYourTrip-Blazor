@@ -21,7 +21,7 @@
 else
 {
     <div class="card shadow border-0 mt-4">
-        <div class="card-header bg-black bg-gradient ml-0 py-3">
+        <div class="card-header bg-dark bg-gradient ml-0 py-3">
             <div class="row">
                 <div class="col-12 text-center">
                     <h2 class="text-white py-2">@(TripId > 0 ? "Update" : "Create") Trip</h2>
@@ -96,12 +96,16 @@ else
                                 @(TripId > 0 ? "Update" : "Create")
                             </button>
                         </div>
-                        <div class="col-6 col-md-3">
-                            <a href="@($"trip/details/{TripId}")" class="btn btn-secondary form-control">
-                                <i class="bi bi-arrow-left-square"></i>
-                                Back to Trip Details
-                            </a>
-                        </div>
+                        @if(TripId > 0)
+                        {
+                            <div class="col-6 col-md-3">
+                                <a href="@($"trip/details/{TripId}")" class="btn btn-secondary form-control">
+                                    <i class="bi bi-arrow-left-square"></i>
+                                    Back to Trip Details
+                                </a>
+                            </div>
+                        }
+                        
                         <div class="col-6 col-md-3">
                             <a href="trip" class="btn btn-secondary form-control">
                                 <i class="bi bi-arrow-left-square"></i>

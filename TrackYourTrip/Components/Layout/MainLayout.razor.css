@@ -8,9 +8,30 @@ main {
     flex: 1;
 }
 
+
+/* ----------------  updated --------------------*/
 .sidebar {
-    background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);
+    background: #343a40; /* Dark gray-black background */
+    color: #f8f9fa; /* Light white-gray text */
 }
+
+.sidebar .menu-item {
+    color: #f8f9fa; /* Default text color */
+}
+
+.sidebar .menu-item:hover {
+    background: #6c757d; /* Medium gray for hover effect */
+    color: #ffffff; /* White hover text */
+}
+
+.sidebar .menu-item.active {
+    border-left: 4px solid #28a745; /* Green accent for active items */
+    background: #6c757d; /* Same as hover for a subtle highlight */
+    color: #ffffff;
+}
+
+
+    /*----------------------*/
 
 .top-row {
     background-color: #f7f7f7;
