@@ -19,13 +19,8 @@
 else
 {
     <div class="card shadow border-0 mt-4">
-        <div class="card-header bg-dark bg-gradient ml-0 py-3">
-            <div class="row">
-                <div class="col-12 text-center">
-                    <h2 class="text-white py-2">@(ExpenseId > 0 ? "Update" : "Add") Expense</h2>
-                </div>
-            </div>
-        </div>
+        <_CardHeader HeaderText="@($"{(ExpenseId > 0 ? "Update" : "Add")} Expense")"></_CardHeader>
+
         <div class="card-body py-4">
             <EditForm Model="Expense" FormName="ExpenseEditForm" OnValidSubmit="UpsertExpense">
                 <DataAnnotationsValidator />
