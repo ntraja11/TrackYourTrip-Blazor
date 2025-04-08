@@ -1,9 +1,12 @@
 ﻿@page "/"
 
 
+@inject IWebHostEnvironment _Environment
+
+
 
 <div class="card shadow border-0 mt-4">
-    <_CardHeader HeaderText="Welcome to Track Your Trip! Dev"></_CardHeader>
+    <_CardHeader HeaderText="@($"Welcome to TrackYourTrip! {(_Environment.IsDevelopment() ? "(Dev)" : "")}")"></_CardHeader>
         
     <div class="card-body py-4">
         <!-- Description Section -->

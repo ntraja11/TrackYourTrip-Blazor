@@ -1,6 +1,5 @@
 ﻿@implements IDisposable
 
-@using Microsoft.AspNetCore.Hosting
 
 @inject IWebHostEnvironment _Environment
 @inject NavigationManager _NavigationManager
@@ -83,19 +82,19 @@
 
     protected override void OnInitialized()
     {
-        currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
-        NavigationManager.LocationChanged += OnLocationChanged;
+        currentUrl = _NavigationManager.ToBaseRelativePath(_NavigationManager.Uri);
+        _NavigationManager.LocationChanged += OnLocationChanged;
     }
 
     private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
     {
-        currentUrl = NavigationManager.ToBaseRelativePath(e.Location);
+        currentUrl = _NavigationManager.ToBaseRelativePath(e.Location);
         StateHasChanged();
     }
 
     public void Dispose()
     {
-        NavigationManager.LocationChanged -= OnLocationChanged;
+        _NavigationManager.LocationChanged -= OnLocationChanged;
     }
 }
 
