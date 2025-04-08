@@ -58,3 +58,22 @@ h1:focus {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
     text-align: start;
 }
+
+/* Scoped to About Page */
+/*.about-page-row {
+    display: flex;
+    flex-wrap: wrap; 
+    align-items: stretch; 
+}*/
+
+.about-feature-box {
+    /*flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;*/
+    min-height: 350px;
+}
+
+.home-feature-box {
+    min-height: 250px;
+}
