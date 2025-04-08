@@ -1,6 +1,8 @@
 ﻿@implements IDisposable
 
-@inject NavigationManager NavigationManager
+
+@inject IWebHostEnvironment _Environment
+@inject NavigationManager _NavigationManager
 
 <div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
@@ -24,13 +26,17 @@
             </NavLink>
         </div>
 
-        <AuthorizeView Roles="@StaticDetails.RoleAdmin">
-            <div class="nav-item px-3">
-                <NavLink class="nav-link" href="trip-radzen" Match="NavLinkMatch.All">
-                    <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Trip-Radzen
-                </NavLink>
-            </div>
-        </AuthorizeView>
+        @if (_Environment.IsDevelopment())
+        {
+            <AuthorizeView Roles="@StaticDetails.RoleAdmin">
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="trip-radzen" Match="NavLinkMatch.All">
+                        <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Trip-Radzen
+                    </NavLink>
+                </div>
+            </AuthorizeView>
+        }
+        
                 
         @* <div class="nav-item px-3">
             <NavLink class="nav-link" href="auth">
@@ -76,19 +82,19 @@
 
     protected override void OnInitialized()
     {
-        currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
-        NavigationManager.LocationChanged += OnLocationChanged;
+        currentUrl = _NavigationManager.ToBaseRelativePath(_NavigationManager.Uri);
+        _NavigationManager.LocationChanged += OnLocationChanged;
     }
 
     private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
     {
-        currentUrl = NavigationManager.ToBaseRelativePath(e.Location);
+        currentUrl = _NavigationManager.ToBaseRelativePath(e.Location);
         StateHasChanged();
     }
 
     public void Dispose()
     {
-        NavigationManager.LocationChanged -= OnLocationChanged;
+        _NavigationManager.LocationChanged -= OnLocationChanged;
     }
 }
 
