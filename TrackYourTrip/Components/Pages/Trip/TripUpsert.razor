@@ -21,7 +21,7 @@
 }
 else
 {
-    <div class="card shadow border-0 mt-4">
+    <div class="card shadow border-0 my-4">
         <_CardHeader HeaderText="@($"{(TripId > 0 ? "Update" : "Create")} Trip")"></_CardHeader>
                 
         <div class="card-body py-4">
@@ -85,8 +85,8 @@ else
                         <ValidationMessage For="@(() => Trip.EndDate)" />
                     </div>
 
-                    <div class="row mt-3">
-                        <div class="col-6 col-md-3">
+                    <div class="row mt-3 row-gap-2">
+                        <div class="col-12 col-md-4">
                             <button type="submit" class="btn btn-primary form-control" >
                                 <i class="bi bi-floppy2-fill"></i>
                                 @(TripId > 0 ? "Update" : "Create")
@@ -94,7 +94,7 @@ else
                         </div>
                         @if(TripId > 0)
                         {
-                            <div class="col-6 col-md-3">
+                            <div class="col-12 col-md-4">
                                 <a href="@($"trip/details/{TripId}")" class="btn btn-secondary form-control">
                                     <i class="bi bi-arrow-left-square"></i>
                                     Back to Trip Details
@@ -102,7 +102,7 @@ else
                             </div>
                         }
                         
-                        <div class="col-6 col-md-3">
+                        <div class="col-12 col-md-4">
                             <a href="trip" class="btn btn-secondary form-control">
                                 <i class="bi bi-arrow-left-square"></i>
                                 Back to Trip List

@@ -24,13 +24,13 @@
 }
 else
 {
-    <div class="card shadow border-0 mt-4">
+    <div class="card shadow border-0 my-4">
         <_CardHeader HeaderText="Trip List"></_CardHeader>
         
         <div class="card-body py-4">
             <div class="row pb-2">
                 <div class="col-12 text-end mb-4">
-                    <a href="trip/create" class="btn btn-lg btn-secondary" style="width:250px;">
+                    <a href="trip/create" class="btn btn-lg btn-secondary responsive-btn">
                         <i class="bi bi-plus-square"></i>
                         Add new Trip
                     </a>
@@ -54,14 +54,13 @@ else
                                     <td>@trip.StartDate</td>
                                     <td>@trip.Status</td>
                                     <td>
-                                        <a href="@($"trip/update/{trip.Id}")" class="btn btn-primary">
-                                            <i class="bi bi-pencil-square"></i>
-                                            Edit
+                                        <a href="@($"trip/update/{trip.Id}")" class="btn btn-primary btn-sm btn-action btn-gap">
+                                            <i class="bi bi-pencil-square"></i><span class="hide-btn-text"> Edit</span>
                                         </a>
                                         <AuthorizeView Roles="@StaticDetails.RoleAdmin">
-                                            <button class="btn btn-danger" @onclick="() => HandleDelete(trip.Id)">
+                                            <button class="btn btn-danger btn-sm btn-action" @onclick="() => HandleDelete(trip.Id)">
                                                 <i class="bi bi-trash3-fill"></i>
-                                                Delete
+                                                <span class="hide-btn-text"> Delete</span>
                                             </button>
                                         </AuthorizeView>
                                     </td>
