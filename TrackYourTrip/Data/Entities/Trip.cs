@@ -35,6 +35,8 @@ namespace TrackYourTrip.Data.Entities
         public string? Notes { get; set; }
 
         public string? Type { get; set; }
+        
+        public string? CreatedByUserEmail { get; set; }
 
         [ForeignKey("Vehicle")]
         public int? VehicleId { get; set; }

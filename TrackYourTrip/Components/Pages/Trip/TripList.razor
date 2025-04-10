@@ -3,7 +3,7 @@
 
 @attribute [Authorize]
 
-@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject AuthenticationStateProvider _authenticationStateProvider
 @inject NavigationManager _navigationManager
 @inject ITripRepository _tripRepository
 @inject IParticipantRepository _participantRepository
@@ -96,7 +96,7 @@ else
 
     private async Task LoadTrips()
     {
-        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
         
 
@@ -104,21 +104,23 @@ else
 
         if (isAdmin)
         {
-            Trips = (await _tripRepository.GetAllAsync()).ToList();
+            Trips = (await _tripRepository.GetAllAsync()).ToList(); 
         }
         else
         {
             var userName = user.Identity?.Name;
-            var participants = await _participantRepository.GetAllAsync(p => p.Name == userName);
-            var trips = participants.Select(p => p.TripId).ToList();
-            foreach (var tripId in trips)
-            {
-                Trips.AddRange(await _tripRepository.GetAllAsync(t => t.Id == tripId));
-            }
+
+            var participantTripIds = (await _participantRepository.GetAllAsync(p => p.Name == userName))
+                                        .Select(p => p.TripId).ToList();
+
+            var trips = await _tripRepository
+                        .GetAllAsync(t => participantTripIds.Contains(t.Id) || t.CreatedByUserEmail == userName);
+
+            Trips.AddRange(trips);            
         }
 
         
-    }
+    }          
 
     private async Task HandleDelete(int id)
     {
