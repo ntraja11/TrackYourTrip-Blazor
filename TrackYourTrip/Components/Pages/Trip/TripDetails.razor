@@ -20,14 +20,14 @@ else
         
         <div class="card-body py-4">
             <div class="row pb-2">
-                <div class="col-6 text-start mb-2">
-                    <a href="@($"trip/update/{TripId}")" class="btn btn-lg btn-primary" style="width:250px;">
+                <div class="col-12 col-md-6 text-start mb-2">
+                    <a href="@($"trip/update/{TripId}")" class="btn btn-lg btn-primary responsive-btn">
                         <i class="bi bi-car-front-fill"></i>
                         Manage Trip
                     </a>                    
                 </div>
-                <div class="col-6 text-end mb-2">
-                    <a href="trip" class="btn btn-lg btn-secondary" style="width:250px;">
+                <div class="col-12 col-md-6 text-end mb-2">
+                    <a href="trip" class="btn btn-lg btn-secondary responsive-btn">
                         <i class="bi bi-arrow-left-square"></i>
                         Back to Trip List
                     </a>
@@ -70,8 +70,8 @@ else
             </table>
 
             <div class="row pb-2">
-                <div class="col-6 text-start">
-                    <a href="@($"trip/{TripId}/add-participant")" class="btn btn-lg btn-primary" style="width:250px;">
+                <div class="col-12 text-start">
+                    <a href="@($"trip/{TripId}/add-participant")" class="btn btn-lg btn-primary responsive-btn" style="width:250px;">
                         <i class="bi bi-person-plus-fill"></i>
                         Manage Participants
                     </a>                
@@ -80,7 +80,7 @@ else
 
             @if (TripParticipantList.Any())
             {
-                <table class="table table-bordered table-striped mb-5">
+                <table class="table table-bordered table-striped mb-5 mt-3">
                     <thead>
                         <tr>
                             <th scope="col">Name</th>
@@ -114,8 +114,8 @@ else
 
 
             <div class="row pb-2">
-                <div class="col-6 text-start">
-                    <a href="@($"trip/{TripId}/add-expense")" class="btn btn-lg btn-primary" style="width:250px;">
+                <div class="col-12 text-start">
+                    <a href="@($"trip/{TripId}/add-expense")" class="btn btn-lg btn-primary responsive-btn" style="width:250px;">
                         <i class="bi bi-currency-rupee"></i>
                         Add Expense
                     </a>

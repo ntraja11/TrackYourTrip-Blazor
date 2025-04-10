@@ -60,20 +60,85 @@ h1:focus {
 }
 
 /* Scoped to About Page */
-/*.about-page-row {
-    display: flex;
-    flex-wrap: wrap; 
-    align-items: stretch; 
-}*/
 
-.about-feature-box {
-    /*flex: 1 1 auto;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;*/
+.about-feature-box {   
     min-height: 350px;
 }
 
 .home-feature-box {
     min-height: 250px;
+}
+
+tr {
+    vertical-align: middle !important;
+}
+
+.card-responsive {
+    width: 100%; 
+    max-width: 28rem; 
+    padding: .1rem; 
+    box-sizing: border-box; 
+}
+
+
+
+@media (max-width: 640.98px) {
+
+    .responsive-btn {
+        width: 100% !important;
+    }
+
+    .btn-action {
+        padding: 10px;
+        width: 100%;
+    }
+    .table {
+        font-size: small !important;
+    }
+    .btn-gap{
+        margin-bottom: 5px;
+    }
+    .card-responsive {
+        max-width: 90%;
+    }
+
+    .list-group-item {
+        flex-wrap: wrap;
+        padding: 0.5rem 1rem;
+        vertical-align: middle;
+    }
+    .list-group-item span {
+        flex-basis: content;
+        margin-top: 0.5rem;
+        text-align: left;
+    }
+    .list-group-item button {
+        width: max-content;
+    }
+    .participant-email {
+        display: none;
+    }
+    .home-feature-box, .about-feature-box {
+        min-height: auto;
+    }
+}
+
+@media (min-width: 641px) {
+
+    .responsive-btn {
+        width: auto;
+        min-width: 225px;
+    }
+    .btn-action {
+        padding: 10px;
+        max-width: auto;
+        width: max-content;
+    }
+    
+}
+
+@media(max-width: 500px){
+    .hide-btn-text {
+        display: none;
+    }
 }

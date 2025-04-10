@@ -22,10 +22,10 @@ else
 
             <div class="row">
                 <!-- Left Column: Dropdown and Add Button -->
-                <div class="col-md-6">
-                    <h5 class="pb-2">Available Participants</h5>
+                <div class="col-12 col-md-6 mb-3">
+                    <h5 class="pb-2">Available Participants:</h5>
                     <div class="form-floating">
-                        <InputSelect @bind-Value="SelectedUserId" class="form-control">
+                        <InputSelect @bind-Value="SelectedUserId" class="form-control overflow-fix">
                             <option value="" disabled selected>-- Select Participant --</option>
                             @foreach (var user in AvailableUsers)
                             {
@@ -34,49 +34,50 @@ else
                         </InputSelect>
                         <label for="SelectedUser">Add Participant</label>
                     </div>
-                    <button class="btn btn-primary mt-3" @onclick="AddSelectedParticipant">Select Participant</button>
+                    <button class="btn btn-primary responsive-btn mt-3" @onclick="AddSelectedParticipant">Select Participant</button>
                 </div>
 
                 <!-- Right Column: Selected Participants -->
                 <div class="col-md-6">
-                    <h5 class="pb-2">Selected Participants</h5>
+                    <h5 class="pb-2">Selected Participants:</h5>
                     <ul class="list-group">
                         @foreach (var participant in SelectedParticipants)
                         {
                             <li class="list-group-item d-flex justify-content-between">
-                                @participant.Name
-                                <span class="text-muted">@participant.Email</span>
+                                <span>@participant.Name</span>
+                                <span class="text-muted participant-email">@participant.Email</span>
                                 <button class="btn btn-danger btn-sm" @onclick="() => RemoveParticipant(participant.Id)">
-                                    <i class="bi bi-trash"></i> Remove
+                                    <i class="bi bi-trash"></i><span class="hide-btn-text"> Remove</span>
                                 </button>
                             </li>
                         }
                         @foreach (var participant in ParticipantsToAdd)
                         {
                             <li class="list-group-item d-flex justify-content-between bg-opacity-75">
-                                @participant.Name
-                                <span class="text-muted">@participant.Email</span>
+                                <span>@participant.Name</span>
+                                <span class="text-muted participant-email">@participant.Email</span>
                                 <button class="btn btn-danger btn-sm" @onclick="() => RemoveParticipant(participant.Id)">
-                                    <i class="bi bi-trash"></i> Remove
+                                    <i class="bi bi-trash"></i><span class="hide-btn-text"> Remove</span>
                                 </button>
                             </li>
                         }
                     </ul>
-                </div>
-            </div>
-            <div class="row mt-4">
-                <div class="col-12 text-end">
-                    <!-- Submit Button -->
-                    <button class="btn btn-success btn-lg" style="width:250px;" @onclick="SubmitParticipants">
-                        <i class="bi bi-check-circle"></i> Submit
-                    </button>
 
-                    <a href="@($"trip/details/{TripId}")" class="btn btn-lg btn-secondary" style="width:250px;">
-                        <i class="bi bi-arrow-left-square"></i>
-                        Back to Trip
-                    </a>
+                    <div class="row mt-4">
+                        <div class="col-12 d-flex justify-content-between">
+                            <button class="btn btn-success btn-lg" @onclick="SubmitParticipants">
+                                <i class="bi bi-check-circle"></i> Submit
+                            </button>
+
+                            <a href="@($"trip/details/{TripId}")" class="btn btn-lg btn-secondary">
+                                <i class="bi bi-arrow-left-square"></i>
+                                Back to Trip
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
+            
 
 
         </div>
