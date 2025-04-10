@@ -25,7 +25,7 @@ else
                 <div class="col-12 col-md-6 mb-3">
                     <h5 class="pb-2">Available Participants:</h5>
                     <div class="form-floating">
-                        <InputSelect @bind-Value="SelectedUserId" class="form-control overflow-fix">
+                        <InputSelect @bind-Value="SelectedUserId" class="form-control">
                             <option value="" disabled selected>-- Select Participant --</option>
                             @foreach (var user in AvailableUsers)
                             {
