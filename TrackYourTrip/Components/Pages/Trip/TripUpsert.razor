@@ -4,6 +4,7 @@
 
 @attribute [Authorize]
 
+@inject AuthenticationStateProvider _authenticationStateProvider
 @inject ITripRepository _tripRepository
 @inject IVehicleRepository _vehicleRepository
 @inject NavigationManager _navigationManager
@@ -163,6 +164,11 @@ else
 
         if (Trip.Id == 0)
         {
+            var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            Trip.CreatedByUserEmail = user.Identity?.Name;
+
             await _tripRepository.CreateAsync(Trip);  
             await _js.ToastrSuccess("Trip created successfully");
         }
