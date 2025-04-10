@@ -5,6 +5,7 @@ using Radzen;
 using TrackYourTrip.Components;
 using TrackYourTrip.Components.Account;
 using TrackYourTrip.Data;
+using TrackYourTrip.Data.DbInitializer;
 using TrackYourTrip.Repository;
 using TrackYourTrip.Repository.IRepository;
 
@@ -15,13 +16,17 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 builder.Services.AddCascadingAuthenticationState();
+
 builder.Services.AddScoped<IdentityUserAccessor>();
 builder.Services.AddScoped<IdentityRedirectManager>();
 builder.Services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();
+
 builder.Services.AddScoped<ITripRepository, TripRepository>();
 builder.Services.AddScoped<IVehicleRepository, VehicleRepository>();
 builder.Services.AddScoped<IExpenseRepository, ExpenseRepository>();
 builder.Services.AddScoped<IParticipantRepository, ParticipantRepository>();
+builder.Services.AddScoped<IDbInitializer, DbInitializer>();
+
 builder.Services.AddRadzenComponents();
 
 builder.Services.AddAuthentication(options =>
@@ -70,4 +75,14 @@ app.MapRazorComponents<App>()
 // Add additional endpoints required by the Identity /Account Razor components.
 app.MapAdditionalIdentityEndpoints();
 
+SeedDatabase();
+
 app.Run();
+
+
+void SeedDatabase()
+{
+    using var scope = app.Services.CreateScope();
+    var dbInitializer = scope.ServiceProvider.GetRequiredService<IDbInitializer>();
+    dbInitializer.InitializeAsync();
+}
