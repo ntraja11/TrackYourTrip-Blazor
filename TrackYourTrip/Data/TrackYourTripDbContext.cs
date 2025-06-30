@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using TrackYourTrip.Data.Entities;
 
@@ -10,6 +10,8 @@ public class TrackYourTripDbContext(DbContextOptions<TrackYourTripDbContext> opt
     public DbSet<Participant> Participants { get; set; }
     public DbSet<Expense> Expenses { get; set; }
     public DbSet<Vehicle> Vehicles { get; set; }
+
+    public DbSet<Company> Companies { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -112,4 +114,5 @@ public class TrackYourTripDbContext(DbContextOptions<TrackYourTripDbContext> opt
 
         );
     }
+
 }

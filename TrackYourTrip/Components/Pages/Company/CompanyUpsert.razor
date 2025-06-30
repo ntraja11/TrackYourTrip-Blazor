@@ -1,0 +1,130 @@
+﻿@page "/company/create"
+@page "/company/update/{companyId:int}"
+
+
+@attribute [Authorize]
+
+@inject AuthenticationStateProvider _authenticationStateProvider
+@inject ICompanyRepository _companyRepository
+@inject NavigationManager _navigationManager
+@inject IJSRuntime _js
+
+
+
+
+@if (IsProcessing)
+{
+    <div class="loader">
+        Loading company...
+    </div>
+}
+else
+{
+    <div class="card shadow border-0 my-4">
+        <_CardHeader HeaderText="@($"{(CompanyId > 0 ? "Update" : "Create")} Company")"></_CardHeader>
+
+        <div class="card-body py-4">
+            <EditForm Model="Company" FormName="CompanyEditForm" OnValidSubmit="UpsertCompany">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+
+
+                <div class="border p-3 mt-4">
+                    <div class="form-floating py-3 col-12">
+                        <InputText @bind-Value="Company.Name" class="form-control" id="Name" placeholder="Name" />
+                        <label for="Name">Name</label>
+                        <ValidationMessage For="@(() => Company.Name)" />
+                    </div>
+
+                    <div class="form-floating py-3 col-12">
+                        <InputText @bind-Value="Company.Location" class="form-control" id="Location" placeholder="Location" />
+                        <label for="Location">Location</label>
+                        <ValidationMessage For="@(() => Company.Location)" />
+                    </div>                
+
+
+
+                    <div class="row mt-3 row-gap-2">
+                        <div class="col-12 col-md-4">
+                            <button type="submit" class="btn btn-primary form-control">
+                                <i class="bi bi-floppy2-fill"></i>
+                                @(CompanyId > 0 ? "Update" : "Create")
+                            </button>
+                        </div>                       
+
+                        <div class="col-12 col-md-4">
+                            <a href="company" class="btn btn-secondary form-control">
+                                <i class="bi bi-arrow-left-square"></i>
+                                Back to Company List
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public int CompanyId { get; set; }
+
+    private bool IsProcessing { get; set; } = true;
+
+    [SupplyParameterFromForm]
+    private Company Company { get; set; } = new Company();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadCompany();
+        IsProcessing = false;
+        StateHasChanged();
+    }
+
+    private async Task LoadCompany()
+    {
+        if (CompanyId > 0)
+        {
+            Company = await _companyRepository.GetAsync(CompanyId);
+        }
+    }
+
+    private async Task UpsertCompany()
+    {
+        IsProcessing = true;
+
+
+        if (Company.Id == 0)
+        {
+            var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            Company companyFromDb = await _companyRepository.GetByNameAsync(Company.Name!);
+
+            if(companyFromDb.Id > 0)
+            {
+                await _js.ToastrError("Company with this name already exists.");
+                IsProcessing = false;
+                return;
+            }
+            else
+            {
+                await _companyRepository.CreateAsync(Company);
+                await _js.ToastrSuccess("Company created successfully");                
+            }
+
+        }
+        else
+        {
+            await _companyRepository.UpdateAsync(Company);
+            await _js.ToastrSuccess("Company updated successfully");
+        }
+        IsProcessing = false;
+        Company = new Company(); 
+        //_navigationManager.NavigateTo("company");
+    }
+
+
+
+}
