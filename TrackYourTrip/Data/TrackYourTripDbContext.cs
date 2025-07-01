@@ -12,6 +12,7 @@ public class TrackYourTripDbContext(DbContextOptions<TrackYourTripDbContext> opt
     public DbSet<Vehicle> Vehicles { get; set; }
 
     public DbSet<Company> Companies { get; set; }
+    public DbSet<JobPost> JobPosts { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

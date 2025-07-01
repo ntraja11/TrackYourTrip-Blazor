@@ -1,0 +1,133 @@
+﻿@page "/jobPost/create"
+@page "/jobPost/update/{jobPostId:int}"
+
+
+@attribute [Authorize]
+
+@* @inject AuthenticationStateProvider _authenticationStateProvider *@
+@inject IJobPostRepository _jobPostRepository
+@inject ICompanyRepository _companyRepository
+@inject NavigationManager _navigationManager
+@inject IJSRuntime _js
+
+
+
+
+@if (IsProcessing)
+{
+    <div class="loader">
+        Loading jobPost...
+    </div>
+}
+else
+{
+    <div class="card shadow border-0 my-4">
+        <_CardHeader HeaderText="@($"{(JobPostId > 0 ? "Update" : "Create")} JobPost")"></_CardHeader>
+
+        <div class="card-body py-4">
+            <EditForm Model="JobPost" FormName="JobPostEditForm" OnValidSubmit="UpsertJobPost">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+
+
+                <div class="border p-3 mt-4">
+                    <div class="form-floating py-3 col-12">
+                        <InputText @bind-Value="JobPost.JobTitle" class="form-control" id="JobTitle" placeholder="Job Title" />
+                        <label for="JobTitle">Job Title</label>
+                        <ValidationMessage For="@(() => JobPost.JobTitle)" />
+                    </div>
+
+                    <div class="form-floating py-3 col-12">
+                        <InputText @bind-Value="JobPost.Company" class="form-control" id="Company" placeholder="Company" />
+                        <label for="Company">Company</label>
+                        <ValidationMessage For="@(() => JobPost.Company)" />
+                    </div>
+
+                    <div class="form-floating py-3 col-12">
+                        <InputDate @bind-Value="JobPost.PostedOn" class="form-control" id="PostedOn" placeholder="Posted On" />
+                        <label for="PostedOn">Posted On</label>
+                        <ValidationMessage For="@(() => JobPost.PostedOn)" />
+                    </div>
+
+
+
+                    <div class="row mt-3 row-gap-2">
+                        <div class="col-12 col-md-4">
+                            <button type="submit" class="btn btn-primary form-control">
+                                <i class="bi bi-floppy2-fill"></i>
+                                @(JobPostId > 0 ? "Update" : "Create")
+                            </button>
+                        </div>                       
+
+                        <div class="col-12 col-md-4">
+                            <a href="jobPost" class="btn btn-secondary form-control">
+                                <i class="bi bi-arrow-left-square"></i>
+                                Back to JobPost List
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public int JobPostId { get; set; }
+
+    private bool IsProcessing { get; set; } = true;
+
+    [SupplyParameterFromForm]
+    private JobPost JobPost { get; set; } = new JobPost();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadJobPost();
+        IsProcessing = false;
+        StateHasChanged();
+    }
+
+    private async Task LoadJobPost()
+    {
+        if (JobPostId > 0)
+        {
+            JobPost = await _jobPostRepository.GetAsync(JobPostId);
+        }
+    }
+
+    private async Task UpsertJobPost()
+    {
+        IsProcessing = true;
+
+
+        if (JobPost.Id == 0)
+        {
+            // var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
+            // var user = authState.User;
+
+            Company company = await _companyRepository.GetByNameAsync(JobPost.Company);
+
+            if(company.Id == 0)
+            {
+                company.Name = JobPost.Company;
+                await _companyRepository.CreateAsync(company);
+            }
+
+            await _jobPostRepository.CreateAsync(JobPost);
+            await _js.ToastrSuccess("JobPost created successfully");
+        }
+        else
+        {
+            await _jobPostRepository.UpdateAsync(JobPost);
+            await _js.ToastrSuccess("JobPost updated successfully");
+        }
+        IsProcessing = false;
+        JobPost = new JobPost(); 
+        //_navigationManager.NavigateTo("jobPost");
+    }
+
+
+
+}
