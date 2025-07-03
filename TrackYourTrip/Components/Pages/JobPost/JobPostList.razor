@@ -28,7 +28,7 @@ else
             <div class="row pb-2">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <div >
-                        Total JobPosts: <strong>@JobPosts.Count</strong>
+                        Total Job Posts: <strong>@JobPosts.Count</strong>
                     </div>
                     <div>
                         <a href="jobPost/create" class="btn btn-lg btn-secondary responsive-btn">
@@ -40,13 +40,30 @@ else
                 </div>
                 @if (JobPosts.Any())
                 {
-                    <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false" FilterMode="FilterMode.Simple" AllowSorting="true" PageSize="10" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
-                                    Data="@JobPosts" LogicalFilterOperator="LogicalFilterOperator.Or" SelectionMode="DataGridSelectionMode.Single">
+                    <RadzenDataGrid AllowFiltering="true"  
+                            AllowColumnResize="true" AllowAlternatingRows="false" 
+                            FilterMode="FilterMode.Simple" AllowSorting="true" PageSize="10" 
+                            AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" 
+                            ShowPagingSummary="true" Data="@JobPosts" 
+                            LogicalFilterOperator="LogicalFilterOperator.Or" 
+                            SelectionMode="DataGridSelectionMode.Single">
                         <Columns>
-                            <RadzenDataGridColumn Property="JobTitle" Filterable="false" Title="Job Title" />
-                            <RadzenDataGridColumn Property="Company" Title="Company Name" />
-                            <RadzenDataGridColumn Property="PostedOn" Filterable="false" Title="Posted On" />
-                            <RadzenDataGridColumn Title="Action" Frozen="true" Sortable="false" Filterable="false" TextAlign="TextAlign.Center">
+                            <RadzenDataGridColumn Filterable="false" Title="Job Title">
+                                <Template Context="jobPost">
+                                    <RadzenText>@jobPost.JobTitle</RadzenText>
+                                </Template>
+                            </RadzenDataGridColumn>
+                            <RadzenDataGridColumn Title="Company Name">
+                                <Template Context="jobPost">
+                                    <RadzenText>@jobPost.Company</RadzenText>
+                                </Template>                                
+                            </RadzenDataGridColumn>
+                            <RadzenDataGridColumn Filterable="false" Title="Posted On">
+                                <Template Context="jobPost">
+                                    <RadzenText>@jobPost.PostedOn</RadzenText>
+                                </Template>
+                            </RadzenDataGridColumn>
+                            <RadzenDataGridColumn Title="Action" Sortable="false" Filterable="false" TextAlign="TextAlign.Center">
                                 <Template Context="jobPost">
                                     <RadzenButton Shade="Shade.Light" ButtonStyle="ButtonStyle.Primary"
                                                   Text="Edit" Click="@(() => _navigationManager.NavigateTo($"jobPost/update/{jobPost.Id}"))">
