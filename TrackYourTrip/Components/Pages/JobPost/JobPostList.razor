@@ -48,17 +48,17 @@ else
                             LogicalFilterOperator="LogicalFilterOperator.Or" 
                             SelectionMode="DataGridSelectionMode.Single">
                         <Columns>
-                            <RadzenDataGridColumn Filterable="false" Title="Job Title">
+                            <RadzenDataGridColumn Property="JobTitle" Filterable="false" Title="Job Title">
                                 <Template Context="jobPost">
                                     <RadzenText>@jobPost.JobTitle</RadzenText>
                                 </Template>
                             </RadzenDataGridColumn>
-                            <RadzenDataGridColumn Title="Company Name">
+                            <RadzenDataGridColumn Property="Company" Title="Company Name">
                                 <Template Context="jobPost">
-                                    <RadzenText>@jobPost.Company</RadzenText>
+                                    <RadzenText >@jobPost.Company</RadzenText>
                                 </Template>                                
                             </RadzenDataGridColumn>
-                            <RadzenDataGridColumn Filterable="false" Title="Posted On">
+                            <RadzenDataGridColumn Filterable="false" Property="PostedOn" Title="Posted On">
                                 <Template Context="jobPost">
                                     <RadzenText>@jobPost.PostedOn</RadzenText>
                                 </Template>
