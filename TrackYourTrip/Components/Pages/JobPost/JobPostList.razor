@@ -1,8 +1,6 @@
 ﻿@page "/jobPost"
 
 
-@attribute [Authorize]
-
 @inject AuthenticationStateProvider _authenticationStateProvider
 @inject NavigationManager _navigationManager
 @inject IJobPostRepository _jobPostRepository
@@ -42,37 +40,26 @@ else
                 </div>
                 @if (JobPosts.Any())
                 {
-                    <table class="table table-bordered table-sjobPosted mt-3">
-                        <thead>
-                            <tr>
-                                <th>Job Title</th>
-                                <th>Company Name</th>
-                                <th>Posted On</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var jobPost in JobPosts)
-                            {
-                                <tr>
-                                    <td>@jobPost.JobTitle</td>
-                                    <td>@jobPost.Company</td>
-                                    <td>@jobPost.PostedOn</td>
-                                    <td>
-                                        <a href="@($"jobPost/update/{jobPost.Id}")" class="btn btn-primary btn-sm btn-action btn-gap">
-                                            <i class="bi bi-pencil-square"></i><span class="hide-btn-text"> Edit</span>
-                                        </a>
-                                        <AuthorizeView Roles="@StaticDetails.RoleAdmin">
-                                            <button class="btn btn-danger btn-sm btn-action" @onclick="() => HandleDelete(jobPost.Id)">
-                                                <i class="bi bi-trash3-fill"></i>
-                                                <span class="hide-btn-text"> Delete</span>
-                                            </button>
-                                        </AuthorizeView>
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
+                    <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false" FilterMode="FilterMode.Simple" AllowSorting="true" PageSize="10" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
+                                    Data="@JobPosts" LogicalFilterOperator="LogicalFilterOperator.Or" SelectionMode="DataGridSelectionMode.Single">
+                        <Columns>
+                            <RadzenDataGridColumn Property="JobTitle" Filterable="false" Title="Job Title" />
+                            <RadzenDataGridColumn Property="Company" Title="Company Name" />
+                            <RadzenDataGridColumn Property="PostedOn" Filterable="false" Title="Posted On" />
+                            <RadzenDataGridColumn Title="Action" Frozen="true" Sortable="false" Filterable="false" TextAlign="TextAlign.Center">
+                                <Template Context="jobPost">
+                                    <RadzenButton Shade="Shade.Light" ButtonStyle="ButtonStyle.Primary"
+                                                  Text="Edit" Click="@(() => _navigationManager.NavigateTo($"jobPost/update/{jobPost.Id}"))">
+                                    </RadzenButton>
+                                    <AuthorizeView Roles="@StaticDetails.RoleAdmin">
+                                        <RadzenButton Shade="Shade.Light" ButtonStyle="ButtonStyle.Danger"
+                                                      Text="Delete" Click="@(() => HandleDelete(jobPost.Id))">
+                                        </RadzenButton>
+                                    </AuthorizeView>
+                                </Template>
+                            </RadzenDataGridColumn>
+                        </Columns>
+                    </RadzenDataGrid>
                 }
 
             </div>

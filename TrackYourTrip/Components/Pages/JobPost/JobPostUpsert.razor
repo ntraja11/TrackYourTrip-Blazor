@@ -2,9 +2,6 @@
 @page "/jobPost/update/{jobPostId:int}"
 
 
-@attribute [Authorize]
-
-@* @inject AuthenticationStateProvider _authenticationStateProvider *@
 @inject IJobPostRepository _jobPostRepository
 @inject ICompanyRepository _companyRepository
 @inject NavigationManager _navigationManager
