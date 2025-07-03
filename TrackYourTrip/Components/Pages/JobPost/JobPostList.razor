@@ -42,11 +42,12 @@ else
                 {
                     <RadzenDataGrid AllowFiltering="true"  
                             AllowColumnResize="true" AllowAlternatingRows="false" 
-                            FilterMode="FilterMode.Simple" AllowSorting="true" PageSize="10" 
-                            AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" 
+                            AllowSorting="true" AllowPaging="true" PageSize="10"
+                            PagerHorizontalAlign="HorizontalAlign.Left" 
                             ShowPagingSummary="true" Data="@JobPosts" 
                             LogicalFilterOperator="LogicalFilterOperator.Or" 
-                            SelectionMode="DataGridSelectionMode.Single">
+                            SelectionMode="DataGridSelectionMode.Single" FilterMode="FilterMode.Simple"
+                            FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive">
                         <Columns>
                             <RadzenDataGridColumn Property="JobTitle" Filterable="false" Title="Job Title">
                                 <Template Context="jobPost">
@@ -91,6 +92,9 @@ else
     private List<JobPost> JobPosts = new List<JobPost>();
     private int JobPostIdToDelete = 0;
     private bool isAdmin;
+
+    LogicalFilterOperator logicalFilterOperator = LogicalFilterOperator.And;
+    FilterCaseSensitivity filterCaseSensitivity = FilterCaseSensitivity.CaseInsensitive;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
