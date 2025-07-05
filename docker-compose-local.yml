@@ -1,0 +1,36 @@
+# services:
+#   trackyourtrip:
+#     image: ${DOCKER_REGISTRY-}trackyourtrip
+#     build:
+#       context: .
+#       dockerfile: TrackYourTrip/Dockerfile
+
+
+version: '3.8'
+
+networks:
+  tracknet:
+
+services:
+  trackyourtrip:
+    build:
+      context: .
+      dockerfile: TrackYourTrip/Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - ConnectionStrings__DefaultConnection=Server=db;Database=TrackYourTripDb;User=sa;Password=Password123@;Encrypt=False;
+    depends_on:
+      - db
+    networks:
+      - tracknet
+
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      SA_PASSWORD: "Password123@"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+    networks:
+      - tracknet

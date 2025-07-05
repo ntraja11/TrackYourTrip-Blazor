@@ -80,14 +80,19 @@ app.MapRazorComponents<App>()
 // Add additional endpoints required by the Identity /Account Razor components.
 app.MapAdditionalIdentityEndpoints();
 
-SeedDatabase();
+DbInitializer();
 
 app.Run();
 
 
-void SeedDatabase()
+void DbInitializer()
 {
     using var scope = app.Services.CreateScope();
+
+    //var dbContext = scope.ServiceProvider.GetRequiredService<TrackYourTripDbContext>();
+    //dbContext.Database.Migrate(); // Apply migrations and create DB if needed
+
     var dbInitializer = scope.ServiceProvider.GetRequiredService<IDbInitializer>();
     dbInitializer.InitializeAsync();
 }
+
