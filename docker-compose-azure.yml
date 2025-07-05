@@ -1,0 +1,13 @@
+# version: '3.8'
+
+services:
+  trackyourtrip:
+    build:
+      context: .
+      dockerfile: TrackYourTrip/Dockerfile
+    ports:
+      - "8090:8080"
+    environment:
+      - ConnectionStrings__DefaultConnection=${AZURE_CONNECTION_STRING}
+    volumes:
+      - ./keys:/app/DataProtection-Keys

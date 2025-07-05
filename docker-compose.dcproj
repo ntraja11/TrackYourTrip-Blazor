@@ -10,10 +10,12 @@
     <DockerServiceName>trackyourtrip</DockerServiceName>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="docker-compose-local.override.yml">
-      <DependentUpon>docker-compose-local.yml</DependentUpon>
+    <None Include=".env" />
+    <None Include="docker-compose-azure.yml" />
+    <None Include="docker-compose.override.yml">
+      <DependentUpon>docker-compose.yml</DependentUpon>
     </None>
-    <None Include="docker-compose-local.yml" />
+    <None Include="docker-compose.yml" />
     <None Include=".dockerignore" />
   </ItemGroup>
 </Project>
