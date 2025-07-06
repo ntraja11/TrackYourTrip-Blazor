@@ -40,6 +40,6 @@ jobs:
           registryPassword: ${{ secrets.TRACKYOURTRIPDOCKERCONTAINER_REGISTRY_PASSWORD }}
           containerAppName: trackyourtrip-docker-container
           resourceGroup: FullStackDotNet
-          imageToBuild: ntraja11/trackyourtrip-docker-container:${{ github.sha }}          
+          imageToBuild: ntraja11/trackyourtrip:latest          
 
 
