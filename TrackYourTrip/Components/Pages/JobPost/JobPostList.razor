@@ -31,7 +31,7 @@ else
                         Total Job Posts: <strong>@JobPosts.Count</strong>
                     </div>
                     <div>
-                        <a href="jobPost/create" class="btn btn-lg btn-secondary responsive-btn">
+                        <a href="jobPost/create" class="btn btn-lg btn-success responsive-btn">
                             <i class="bi bi-plus-square"></i>
                             Add new JobPost
                         </a>
@@ -95,8 +95,6 @@ else
     private int JobPostIdToDelete = 0;
     private bool isAdmin;
 
-    LogicalFilterOperator logicalFilterOperator = LogicalFilterOperator.And;
-    FilterCaseSensitivity filterCaseSensitivity = FilterCaseSensitivity.CaseInsensitive;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
