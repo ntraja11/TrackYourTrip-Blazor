@@ -68,10 +68,12 @@ else
                                 <Template Context="jobPost">
                                     <RadzenButton Shade="Shade.Light" ButtonStyle="ButtonStyle.Primary"
                                                   Text="Edit" Click="@(() => _navigationManager.NavigateTo($"jobPost/update/{jobPost.Id}"))">
+                                            <RadzenIcon Icon="edit_square" />
                                     </RadzenButton>
                                     <AuthorizeView Roles="@StaticDetails.RoleAdmin">
                                         <RadzenButton Shade="Shade.Light" ButtonStyle="ButtonStyle.Danger"
                                                       Text="Delete" Click="@(() => HandleDelete(jobPost.Id))">
+                                            <RadzenIcon Icon="delete" />
                                         </RadzenButton>
                                     </AuthorizeView>
                                 </Template>
