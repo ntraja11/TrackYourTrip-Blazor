@@ -365,3 +365,5 @@ FodyWeavers.xsd
 /.env
 /keys
 /TrackYourTrip/Properties/ServiceDependencies/TrackYourTrip-Dev - Web Deploy/profile.arm.json
+/TrackYourTrip/Properties/ServiceDependencies/TrackYourTrip - Web Deploy/profile.arm.json
+/TrackYourTrip/Properties/ServiceDependencies/TrackYourTrip - Web Deploy1/profile.arm.json
