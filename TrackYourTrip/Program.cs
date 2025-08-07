@@ -39,8 +39,8 @@ builder.Services.AddDbContext<TrackYourTripDbContext>(options =>
     options.UseSqlServer(connectionString));
 
 
-builder.Services.AddDataProtection()
-    .PersistKeysToFileSystem(new DirectoryInfo("/app/DataProtection-Keys"));
+//builder.Services.AddDataProtection()
+//    .PersistKeysToFileSystem(new DirectoryInfo("/app/DataProtection-Keys"));
 
 builder.Services.AddRadzenComponents();
 
