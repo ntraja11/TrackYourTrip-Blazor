@@ -1,9 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.Design;
 using System.Linq;
 using System.Linq.Expressions;
 using TrackYourTrip.Data;
 using TrackYourTrip.Data.Entities;
+using TrackYourTrip.Hubs;
 using TrackYourTrip.Repository.IRepository;
 
 namespace TrackYourTrip.Repository
@@ -11,15 +13,19 @@ namespace TrackYourTrip.Repository
     public class CompanyRepository : ICompanyRepository
     {
         private readonly TrackYourTripDbContext _db;
-        public CompanyRepository(TrackYourTripDbContext db)
+        private readonly IHubContext<CompanyHub> _hubContext;
+        public CompanyRepository(TrackYourTripDbContext db, IHubContext<CompanyHub> hubContext)
         {
             _db = db;
+            _hubContext = hubContext;
         }
 
         public async Task<Company> CreateAsync(Company company)
         {
             await _db.Companies.AddAsync(company);
             await _db.SaveChangesAsync();
+
+            await _hubContext.Clients.All.SendAsync("CompaniesUpdated");
             return company;
         }
 
@@ -29,7 +35,14 @@ namespace TrackYourTrip.Repository
             if (company is not null)
             {
                 _db.Companies.Remove(company);
-                return (await _db.SaveChangesAsync()) > 0;
+                var deleted = await _db.SaveChangesAsync() > 0;
+
+                if (deleted)
+                {
+                    await _hubContext.Clients.All.SendAsync("CompaniesUpdated");
+                }
+
+                return deleted;
             }
             return false;
         }

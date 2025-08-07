@@ -1,9 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.Design;
 using System.Linq;
 using System.Linq.Expressions;
 using TrackYourTrip.Data;
 using TrackYourTrip.Data.Entities;
+using TrackYourTrip.Hubs;
 using TrackYourTrip.Repository.IRepository;
 
 namespace TrackYourTrip.Repository
@@ -11,15 +13,19 @@ namespace TrackYourTrip.Repository
     public class JobPostRepository : IJobPostRepository
     {
         private readonly TrackYourTripDbContext _db;
-        public JobPostRepository(TrackYourTripDbContext db)
+        private readonly IHubContext<JobPostHub> _hubContext;
+        public JobPostRepository(TrackYourTripDbContext db, IHubContext<JobPostHub> hubContext)
         {
             _db = db;
+            _hubContext = hubContext;
         }
 
         public async Task<JobPost> CreateAsync(JobPost jobPost)
         {
             await _db.JobPosts.AddAsync(jobPost);
             await _db.SaveChangesAsync();
+
+            await _hubContext.Clients.All.SendAsync("JobPostsUpdated");
             return jobPost;
         }
 
@@ -29,7 +35,14 @@ namespace TrackYourTrip.Repository
             if (jobPost is not null)
             {
                 _db.JobPosts.Remove(jobPost);
-                return (await _db.SaveChangesAsync()) > 0;
+
+                var deleted = await _db.SaveChangesAsync() > 0;
+
+                if (deleted)
+                {
+                    await _hubContext.Clients.All.SendAsync("JobPostsUpdated");
+                }
+                return deleted;
             }
             return false;
         }
@@ -55,10 +68,7 @@ namespace TrackYourTrip.Repository
             await _db.SaveChangesAsync();
 
             return jobPost;
-        }
-                
-
-        
+        }        
 
 
         private async Task<IEnumerable<JobPost>> GetQuery(Expression<Func<JobPost, bool>>? filter, string? includeProperties)

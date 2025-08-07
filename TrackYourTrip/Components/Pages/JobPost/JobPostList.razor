@@ -1,5 +1,7 @@
 ﻿@page "/jobPost"
 
+@using Microsoft.AspNetCore.SignalR.Client
+
 
 @inject AuthenticationStateProvider _authenticationStateProvider
 @inject NavigationManager _navigationManager
@@ -94,38 +96,74 @@ else
     private List<JobPost> JobPosts = new List<JobPost>();
     private int JobPostIdToDelete = 0;
     private bool isAdmin;
+    private HubConnection _hubConnection;
 
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            await LoadJobPosts();
+            await InitHubConnection();
             IsProcessing = false;
             StateHasChanged();
         }
     }
 
+    private async Task InitHubConnection()
+    {
+        _hubConnection = new HubConnectionBuilder()
+        .WithUrl(_navigationManager.ToAbsoluteUri("/jobPostHub"))
+        .Build();
+
+        _hubConnection.On("JobPostsUpdated", async () =>
+        {
+            await InvokeAsync(async () =>
+            {
+                await LoadJobPosts();
+                StateHasChanged();
+            });
+            
+        });
+
+        await _hubConnection.StartAsync();
+        await LoadJobPosts();
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_hubConnection is not null)
+        {
+            await _hubConnection.DisposeAsync();
+        }
+    }
+
     private async Task LoadJobPosts()
     {
+        /*
         var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
 
 
         isAdmin = user.IsInRole(StaticDetails.RoleAdmin);
+        */
 
-        if (isAdmin)
-        {
-            JobPosts = (await _jobPostRepository.GetAllAsync()).ToList();
-        }
-        else
-        {
-            var userName = user.Identity?.Name;
+
+        /*
+        // if (isAdmin)
+        // {
+        //     JobPosts = (await _jobPostRepository.GetAllAsync()).ToList();
+        // }
+        // else
+        // {
+        //     var userName = user.Identity?.Name;
                        
-            var jobPosts = await _jobPostRepository.GetAllAsync();
+        //     var jobPosts = await _jobPostRepository.GetAllAsync();
 
-            JobPosts.AddRange(jobPosts);
-        }
+        //     JobPosts.AddRange(jobPosts);
+        // }
+        */
+
+        JobPosts = (await _jobPostRepository.GetAllAsync()).ToList();
 
 
     }
@@ -153,7 +191,6 @@ else
             {
                 await _js.ToastrError("Error encountered while deleting");
             }
-            await LoadJobPosts();
 
         }
         JobPostIdToDelete = 0;

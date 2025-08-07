@@ -1,4 +1,5 @@
 ﻿@page "/company"
+@using Microsoft.AspNetCore.SignalR.Client
 
 
 @inject AuthenticationStateProvider _authenticationStateProvider
@@ -84,25 +85,56 @@ else
     private List<Company> Companies = new List<Company>();
     private int CompanyIdToDelete = 0;
     private bool isAdmin;
+    private HubConnection _hubConnection;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            await LoadCompanies();
+            await InitHubConnection();
             IsProcessing = false;
             StateHasChanged();
         }
     }
 
+    private async Task InitHubConnection()
+    {
+        _hubConnection = new HubConnectionBuilder()
+        .WithUrl(_navigationManager.ToAbsoluteUri("/companyHub"))
+        .Build();
+
+        _hubConnection.On("CompaniesUpdated", async () =>
+        {
+            await InvokeAsync(async () =>
+            {
+                await LoadCompanies();
+                StateHasChanged();
+            });
+
+        });
+
+        await _hubConnection.StartAsync();
+        await LoadCompanies();
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_hubConnection is not null)
+        {
+            await _hubConnection.DisposeAsync();
+        }
+    }
+
     private async Task LoadCompanies()
     {
+        /*
         var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
 
 
         isAdmin = user.IsInRole(StaticDetails.RoleAdmin);
-
+        */
+        /*
         if (isAdmin)
         {
             Companies = (await _companyRepository.GetAllAsync()).ToList();
@@ -115,6 +147,9 @@ else
 
             Companies.AddRange(companies);
         }
+        */
+
+        Companies = (await _companyRepository.GetAllAsync()).ToList();
 
 
     }
@@ -142,7 +177,6 @@ else
             {
                 await _js.ToastrError("Error encountered while deleting");
             }
-            await LoadCompanies();
 
         }
         CompanyIdToDelete = 0;

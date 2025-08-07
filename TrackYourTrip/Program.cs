@@ -7,6 +7,7 @@ using TrackYourTrip.Components;
 using TrackYourTrip.Components.Account;
 using TrackYourTrip.Data;
 using TrackYourTrip.Data.DbInitializer;
+using TrackYourTrip.Hubs;
 using TrackYourTrip.Repository;
 using TrackYourTrip.Repository.IRepository;
 
@@ -83,8 +84,13 @@ app.MapStaticAssets();
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 
+app.MapHub<JobPostHub>("/jobPostHub");
+app.MapHub<CompanyHub>("/companyHub");
+
 // Add additional endpoints required by the Identity /Account Razor components.
 app.MapAdditionalIdentityEndpoints();
+
+
 
 DbInitializer();
 
