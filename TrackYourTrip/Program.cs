@@ -1,7 +1,10 @@
-﻿using Microsoft.AspNetCore.Components.Authorization;
+﻿using Azure.Extensions.AspNetCore.DataProtection.Blobs;
+using Azure.Storage.Blobs;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Radzen;
 using TrackYourTrip.Components;
 using TrackYourTrip.Components.Account;
@@ -58,6 +61,18 @@ builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.Requ
     .AddDefaultTokenProviders();
 
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
+
+
+
+var blobServiceClient = new BlobServiceClient(builder.Configuration.GetValue<string>("BlobConnectionString"));
+var containerClient = blobServiceClient.GetBlobContainerClient(builder.Configuration.GetValue<string>("BlobContainerName"));
+containerClient.CreateIfNotExists();
+
+var blobClient = containerClient.GetBlobClient("keys.xml");
+
+builder.Services.AddDataProtection()
+    .PersistKeysToAzureBlobStorage(blobClient);
+
 
 
 var app = builder.Build();
