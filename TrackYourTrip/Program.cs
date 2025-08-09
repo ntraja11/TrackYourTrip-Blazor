@@ -1,10 +1,9 @@
-﻿using Azure.Extensions.AspNetCore.DataProtection.Blobs;
-using Azure.Storage.Blobs;
+﻿using Azure.Storage.Blobs;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Radzen;
 using TrackYourTrip.Components;
 using TrackYourTrip.Components.Account;
@@ -39,7 +38,7 @@ builder.Services.AddDbContext<TrackYourTripDbContext>(options =>
     options.UseSqlServer(connectionString));
 
 
-//builder.Services.AddDataProtection()
+//builder.Services.AddDataProtection()f
 //    .PersistKeysToFileSystem(new DirectoryInfo("/app/DataProtection-Keys"));
 
 builder.Services.AddRadzenComponents();
@@ -73,6 +72,13 @@ var blobClient = containerClient.GetBlobClient("keys.xml");
 builder.Services.AddDataProtection()
     .PersistKeysToAzureBlobStorage(blobClient);
 
+builder.Services.AddSignalR();
+builder.Services.AddResponseCompression(options =>
+{
+    options.MimeTypes = ResponseCompressionDefaults.MimeTypes
+        .Concat(new[] { "application/octet-stream"});
+});
+
 
 
 var app = builder.Build();
@@ -94,6 +100,8 @@ app.UseHttpsRedirection();
 
 
 app.UseAntiforgery();
+
+app.UseResponseCompression();
 
 app.MapStaticAssets();
 app.MapRazorComponents<App>()
