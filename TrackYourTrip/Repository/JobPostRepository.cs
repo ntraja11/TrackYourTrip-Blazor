@@ -73,7 +73,7 @@ namespace TrackYourTrip.Repository
 
         private async Task<IEnumerable<JobPost>> GetQuery(Expression<Func<JobPost, bool>>? filter, string? includeProperties)
         {
-            IQueryable<JobPost> query = _db.Set<JobPost>();
+            IQueryable<JobPost> query = _db.Set<JobPost>().OrderByDescending(o => o.PostedOn);
 
             if (filter != null)
             {

@@ -81,6 +81,16 @@ tr {
 }
 
 
+.rz-column-title {
+    font-size: large !important;
+}
+
+.active-job {
+    color: var(--rz-success-darker) !important;
+    font-weight: 600 !important;
+}
+
+
 
 @media (max-width: 640.98px) {
 

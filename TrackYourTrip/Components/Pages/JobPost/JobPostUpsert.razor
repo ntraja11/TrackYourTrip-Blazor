@@ -1,5 +1,5 @@
-﻿@page "/jobPost/create"
-@page "/jobPost/update/{jobPostId:int}"
+﻿@page "/jobApplication/create"
+@page "/jobApplication/update/{jobPostId:int}"
 
 
 @inject IJobPostRepository _jobPostRepository
@@ -13,13 +13,13 @@
 @if (IsProcessing)
 {
     <div class="loader">
-        Loading jobPost...
+        Loading job application...
     </div>
 }
 else
 {
     <div class="card shadow border-0 my-4">
-        <_CardHeader HeaderText="@($"{(JobPostId > 0 ? "Update" : "Create")} JobPost")"></_CardHeader>
+        <_CardHeader HeaderText="@($"{(JobPostId > 0 ? "Update" : "Create")} Job Application")"></_CardHeader>
 
         <div class="card-body py-4">
             <EditForm Model="JobPost" FormName="JobPostEditForm" OnValidSubmit="UpsertJobPost">
@@ -46,20 +46,27 @@ else
                         <ValidationMessage For="@(() => JobPost.PostedOn)" />
                     </div>
 
+                    <div class="py-3 col-12">
+                        <div class="d-flex align-items-center ms-1">
+                            <label for="IsActive" class="me-3 mb-0">Is Active</label>
+                            <InputCheckbox @bind-Value="JobPost.IsActive" id="IsActive" class="form-check-input" />
+                        </div>
+                    </div>
+
 
 
                     <div class="row mt-3 row-gap-2">
                         <div class="col-12 col-md-4">
                             <button type="submit" class="btn btn-primary form-control">
-                                <i class="bi bi-floppy2-fill"></i>
+                                <i class="bi bi-floppy2-fill me-2"></i>
                                 @(JobPostId > 0 ? "Update" : "Create")
                             </button>
                         </div>                       
 
                         <div class="col-12 col-md-4">
-                            <a href="jobPost" class="btn btn-secondary form-control">
-                                <i class="bi bi-arrow-left-square"></i>
-                                Back to JobPost List
+                            <a href="jobApplication" class="btn btn-secondary form-control">
+                                <i class="bi bi-arrow-left-square me-2"></i>
+                                Back to Job Application List
                             </a>
                         </div>
                     </div>

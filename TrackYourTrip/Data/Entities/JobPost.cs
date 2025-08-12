@@ -11,5 +11,10 @@ namespace TrackYourTrip.Data.Entities
         public string Company { get; set; } = string.Empty;
         [Required]
         public DateOnly PostedOn { get; set; } = DateOnly.FromDateTime(DateTime.UtcNow);
+
+        public bool IsActive { get; set; } = true;
+
+        public int Iteration { get; set; } = 1;
+
     }
 }

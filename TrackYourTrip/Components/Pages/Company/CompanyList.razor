@@ -36,7 +36,7 @@ else
                     </div>
                     <div>
                         <a href="company/create" class="btn btn-lg btn-primary responsive-btn">
-                            <i class="bi bi-plus-square"></i>
+                            <i class="bi bi-plus-square me-2"></i>
                             Add new Company
                         </a>
                     </div>
@@ -86,8 +86,8 @@ else
     private bool IsProcessing = true;
     private List<Company> Companies = new List<Company>();
     private int CompanyIdToDelete = 0;
-    private bool isAdmin;
-    private HubConnection _hubConnection;
+    //private bool isAdmin;
+    private HubConnection? _hubConnection;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
