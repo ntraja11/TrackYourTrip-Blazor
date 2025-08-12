@@ -77,7 +77,7 @@ else
                             <RadzenDataGridColumn Title="Action" Sortable="false" Filterable="false" TextAlign="TextAlign.Center">
                                 <Template Context="jobPost">
                                     <RadzenButton Shade="Shade.Light" ButtonStyle="ButtonStyle.Primary"
-                                                  Text="Edit" Click="@(() => _navigationManager.NavigateTo($"jobPost/update/{jobPost.Id}"))">
+                                                  Text="Edit" Click="@(() => _navigationManager.NavigateTo($"jobApplication/update/{jobPost.Id}"))">
                                             <RadzenIcon Icon="edit_square" />
                                     </RadzenButton>
                                     <AuthorizeView Roles="@StaticDetails.RoleAdmin">
