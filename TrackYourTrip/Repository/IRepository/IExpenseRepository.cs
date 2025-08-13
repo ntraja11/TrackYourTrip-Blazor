@@ -5,10 +5,10 @@ namespace TrackYourTrip.Repository.IRepository
 {
     public interface IExpenseRepository
     {
-        public Task<IEnumerable<Expense>> GetAllAsync(Expression<Func<Expense, bool>>? filter = null, string? includeProperties = null);
-        public Task<Expense> GetAsync(int vehicleId);
-        public Task<Expense> CreateAsync(Expense vehicle);
-        public Task<Expense> UpdateAsync(Expense vehicle);
-        public Task<bool> DeleteAsync(int vehicleId);
+        Task<IEnumerable<Expense>> GetAllAsync(Expression<Func<Expense, bool>>? filter = null, string? includeProperties = null);
+        Task<Expense> GetAsync(int vehicleId);
+        Task<Expense> CreateAsync(Expense vehicle);
+        Task<Expense> UpdateAsync(Expense vehicle);
+        Task<bool> DeleteAsync(int vehicleId);
     }
 }

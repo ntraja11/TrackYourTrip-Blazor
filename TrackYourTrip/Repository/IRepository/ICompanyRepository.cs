@@ -5,11 +5,12 @@ namespace TrackYourTrip.Repository.IRepository
 {
     public interface ICompanyRepository
     {
-        public Task<IEnumerable<Company>> GetAllAsync(Expression<Func<Company, bool>>? filter = null, string? includeProperties = null);
-        public Task<Company> GetAsync(int companyId, bool noTracking = false);
-        public Task<Company> GetByNameAsync(string name);
-        public Task<Company> CreateAsync(Company company);
-        public Task<Company> UpdateAsync(Company company);
-        public Task<bool> DeleteAsync(int companyId);
+        Task<IEnumerable<Company>> GetAllAsync(Expression<Func<Company, bool>>? filter = null, string? includeProperties = null);
+        Task<Company> GetAsync(int companyId, bool noTracking = false);
+        Task<Company> GetByNameAsync(string name, bool noTracking = false);
+        
+        Task<Company> CreateAsync(Company company);
+        Task<Company> UpdateAsync(Company company);
+        Task<bool> DeleteAsync(int companyId);
     }
 }

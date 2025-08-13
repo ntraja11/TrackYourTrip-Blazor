@@ -46,15 +46,21 @@ namespace TrackYourTrip.Repository
             }
             return false;
         }
-
-        public async Task<Company> GetByNameAsync(string name)
+        
+        public async Task<Company> GetByNameAsync(string name, bool noTracking = false)
         {
             IQueryable<Company> query = _db.Companies;
+
+            if (noTracking)
+            {
+                query = query.AsNoTracking();
+            }
 
             var company = await query.FirstOrDefaultAsync(t => t.Name == name);
 
             return company ?? new Company();
         }
+
 
         public async Task<Company> GetAsync(int companyId, bool noTracking = false)
         {

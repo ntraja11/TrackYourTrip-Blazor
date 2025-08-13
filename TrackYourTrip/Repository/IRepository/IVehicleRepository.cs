@@ -4,7 +4,7 @@ namespace TrackYourTrip.Repository.IRepository
 {
     public interface IVehicleRepository
     {
-        public Task<IEnumerable<Vehicle>> GetAllAsync();
-        public Task<Vehicle> GetAsync(int vehicleId);
+        Task<IEnumerable<Vehicle>> GetAllAsync();
+        Task<Vehicle> GetAsync(int vehicleId);
     }
 }

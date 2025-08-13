@@ -7,7 +7,7 @@
 @inject AuthenticationStateProvider _authenticationStateProvider
 @inject NavigationManager _navigationManager
 @inject ICompanyRepository _companyRepository
-@inject IParticipantRepository _participantRepository
+@inject IJobPostRepository _jobPostRepository
 @inject IJSRuntime _js
 
 <_ConfirmationModal OnModalConfirmation="ConfirmDeleteCompany"
@@ -148,25 +148,22 @@ else
 
 
         isAdmin = user.IsInRole(StaticDetails.RoleAdmin);
-        */
-        /*
+
         if (isAdmin)
         {
             Companies = (await _companyRepository.GetAllAsync()).ToList();
-        }
+            }
         else
         {
             var userName = user.Identity?.Name;
-                       
+
             var companies = await _companyRepository.GetAllAsync();
 
             Companies.AddRange(companies);
-        }
+            }
         */
 
         Companies = (await _companyRepository.GetAllAsync()).ToList();
-
-
     }
 
     private async Task HandleDelete(int id)

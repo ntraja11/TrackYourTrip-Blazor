@@ -47,6 +47,11 @@ namespace TrackYourTrip.Repository
             return false;
         }
 
+        public async Task<IEnumerable<JobPost>> GetAllByCompanyNameAsync(string name)
+        {
+            return await _db.JobPosts.Where(c => c.Company == name).OrderBy(o => o.PostedOn).ToListAsync();
+        }
+
         public async Task<IEnumerable<JobPost>> GetAllAsync(Expression<Func<JobPost, bool>>? filter = null,
             string? includeProperties = null)
         {

@@ -118,6 +118,13 @@ else
                 company.Name = JobPost.Company;
                 await _companyRepository.CreateAsync(company);
             }
+            else
+            {
+                JobPost.Iteration = company.LastIterationCount + 1; 
+                company.LastIterationCount = JobPost.Iteration;     
+                await _companyRepository.UpdateAsync(company);
+
+            }
 
             await _jobPostRepository.CreateAsync(JobPost);
             await _js.ToastrSuccess("JobPost created successfully");
@@ -129,7 +136,7 @@ else
         }
         IsProcessing = false;
         JobPost = new JobPost(); 
-        //_navigationManager.NavigateTo("jobPost");
+        _navigationManager.NavigateTo("jobApplication");
     }
 
 

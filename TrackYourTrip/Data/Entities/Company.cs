@@ -10,5 +10,7 @@ namespace TrackYourTrip.Data.Entities
                     
         public string? Location { get; set; } = "Denmark";
 
+        public int LastIterationCount { get; set; } = 1;
+
     }
 }

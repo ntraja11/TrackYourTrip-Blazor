@@ -7,6 +7,7 @@
 @inject AuthenticationStateProvider _authenticationStateProvider
 @inject NavigationManager _navigationManager
 @inject IJobPostRepository _jobPostRepository
+@inject ICompanyRepository _companyRepository
 @inject IJSRuntime _js
 
 <_ConfirmationModal OnModalConfirmation="ConfirmDeleteJobPost"
@@ -82,7 +83,7 @@ else
                                     </RadzenButton>
                                     <AuthorizeView Roles="@StaticDetails.RoleAdmin">
                                         <RadzenButton Shade="Shade.Light" ButtonStyle="ButtonStyle.Danger"
-                                                      Text="Delete" Click="@(() => HandleDelete(jobPost.Id))">
+                                                      Text="Delete" Click="@(() => HandleDelete(jobPost.Id, jobPost.Company))">
                                             <RadzenIcon Icon="delete" />
                                         </RadzenButton>
                                     </AuthorizeView>
@@ -103,6 +104,7 @@ else
     private bool IsProcessing = true;
     private List<JobPost> JobPosts = new List<JobPost>();
     private int JobPostIdToDelete = 0;
+    private string CompanyNameFromJobPostToDelete = "";
     //private bool isAdmin;
     private HubConnection? _hubConnection;
 
@@ -187,9 +189,10 @@ else
         JobPosts = (await _jobPostRepository.GetAllAsync()).ToList();
     }
 
-    private async Task HandleDelete(int id)
+    private async Task HandleDelete(int id, string companyName)
     {
         JobPostIdToDelete = id;
+        CompanyNameFromJobPostToDelete = companyName;
         await _js.InvokeVoidAsync("ShowConfirmationModal");
     }
 
@@ -201,7 +204,25 @@ else
 
         if (isConfirmed && JobPostIdToDelete != 0)
         {
+            var company = await _companyRepository.GetByNameAsync(CompanyNameFromJobPostToDelete);
+            if (company.LastIterationCount > 0)
+            {
+                company.LastIterationCount -= 1;
+                await _companyRepository.UpdateAsync(company);
+            }
             var result = await _jobPostRepository.DeleteAsync(JobPostIdToDelete);
+
+            var jobPostsFromThisCompany = await _jobPostRepository.GetAllByCompanyNameAsync(company.Name!);
+
+            var jpCountStart = 1;
+            foreach(var jp in jobPostsFromThisCompany)
+            {
+                jp.Iteration = jpCountStart;
+                jpCountStart++;
+            }
+
+            await LoadJobPosts();
+
             if (result)
             {
                 await _js.ToastrSuccess("JobPost deleted successfully");

@@ -95,8 +95,8 @@ else
 
         if (Company.Id == 0)
         {
-            var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
-            var user = authState.User;
+            //var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
+            //var user = authState.User;
 
             Company companyFromDb = await _companyRepository.GetByNameAsync(Company.Name!);
 
