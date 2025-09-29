@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace TrackYourTrip.Data.Entities
 {
@@ -15,6 +16,8 @@ namespace TrackYourTrip.Data.Entities
         public bool IsActive { get; set; } = true;
 
         public int Iteration { get; set; } = 1;
+
+        public string JobPostLink { get; set; } = string.Empty;
 
     }
 }

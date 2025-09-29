@@ -55,7 +55,14 @@ else
                         <Columns>
                             <RadzenDataGridColumn Property="JobTitle" Width="300px" Filterable="false" Title="Job Title">
                                 <Template Context="jobPost">
-                                    <RadzenText>@jobPost.JobTitle</RadzenText>
+                                    @if(jobPost.JobPostLink == string.Empty)
+                                    {
+                                        <RadzenText>@jobPost.JobTitle</RadzenText>
+                                    }
+                                    else
+                                    {
+                                        <RadzenText><a href="@jobPost.JobPostLink">@jobPost.JobTitle</a></RadzenText>
+                                    }                                    
                                 </Template>
                             </RadzenDataGridColumn>
                             <RadzenDataGridColumn Property="Company" Width="220px" Title="Company Name">

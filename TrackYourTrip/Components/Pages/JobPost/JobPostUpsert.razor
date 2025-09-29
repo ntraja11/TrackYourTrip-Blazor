@@ -41,6 +41,12 @@ else
                     </div>
 
                     <div class="form-floating py-3 col-12">
+                        <InputText @bind-Value="JobPost.JobPostLink" class="form-control" id="JobPostLink" placeholder="Job Post Link" />
+                        <label for="JobPostLink">Job Post Link</label>
+                        <ValidationMessage For="@(() => JobPost.JobPostLink)" />
+                    </div>
+
+                    <div class="form-floating py-3 col-12">
                         <InputDate @bind-Value="JobPost.PostedOn" class="form-control" id="PostedOn" placeholder="Posted On" />
                         <label for="PostedOn">Posted On</label>
                         <ValidationMessage For="@(() => JobPost.PostedOn)" />
